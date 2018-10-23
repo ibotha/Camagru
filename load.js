@@ -20,7 +20,7 @@ function runcam(){
 function imagething()
 {
     document.getElementById("image").style.display = "block";
-    document.getElementById("camoptions").style.display = "block";
+    document.getElementById("camoptions").style.display = "flex";
     var temp = document.createElement('canvas');
 
         temp.width  = video.offsetWidth;
@@ -35,14 +35,16 @@ function imagething()
             video.offsetWidth, video.offsetHeight
         );
         image.style.height    = parseInt( image.offsetWidth * tempScale );
-        image.width        = image.offsetWidth;
-        image.height        = image.offsetHeight;
-        var context        = image.getContext("2d"),
-            scale        = image.width/temp.width;
+        image.width = video.offsetWidth;
+        image.height = video.offsetHeight;
+        console.log(image.height);
+        var context = image.getContext("2d"),
+            scale = image.width/temp.width;
         context.scale(scale, scale);
         context.drawImage(temp, 0, 0);
     document.getElementById("webcam").style.display = "none";
     document.getElementById("capture").style.display = "none";
+    document.getElementById("upload").style.display = "none";
 }
 
 function loadCamera()
