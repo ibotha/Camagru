@@ -58,6 +58,7 @@ function loadCamera()
             document.getElementById("capture").addEventListener("click", imagething);
             document.getElementById("image").style.display = "none";
             document.getElementById("camoptions").style.display = "none";
+            document.getElementById("cancel").addEventListener("click", loadCamera);
         }
     };
 
