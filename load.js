@@ -2,7 +2,7 @@ var video, image;
 
 function runcam(){
     video = document.getElementById('webcam');
-    image = document.getElementById("image").getContext("2d");
+    image = document.getElementById("image");
 
     if (navigator.mediaDevices.getUserMedia)
     {
@@ -21,10 +21,26 @@ function imagething()
 {
     document.getElementById("image").style.display = "block";
     document.getElementById("camoptions").style.display = "block";
-    image.width = video.offsetWidth;
-    image.height = video.offsetHeight;
-    console.log(video.height + ",  " + video.width + ",  " + image.width + ",  " + image.height);
-    image.drawImage(video, 0, 0, video.width, video.height);
+    var temp = document.createElement('canvas');
+
+        temp.width  = video.offsetWidth;
+        temp.height = video.offsetHeight;
+
+        var tempcontext = temp.getContext("2d"),
+            tempScale = (temp.height/temp.width);
+
+        tempcontext.drawImage(
+            video,
+            0, 0,
+            video.offsetWidth, video.offsetHeight
+        );
+        image.style.height    = parseInt( image.offsetWidth * tempScale );
+        image.width        = image.offsetWidth;
+        image.height        = image.offsetHeight;
+        var context        = image.getContext("2d"),
+            scale        = image.width/temp.width;
+        context.scale(scale, scale);
+        context.drawImage(temp, 0, 0);
     document.getElementById("webcam").style.display = "none";
     document.getElementById("capture").style.display = "none";
 }
