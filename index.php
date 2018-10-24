@@ -47,7 +47,7 @@
 					<p>Confirm Password</p>
 					<input id="confirminput" type="password">
 				</div>
-				<button id="submit" type="submit">OK</button>
+				<button id="submit">OK</button>
 			</div>
 		</div>
 		<div id=body></div>
