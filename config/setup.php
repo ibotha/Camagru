@@ -4,6 +4,7 @@ require "config/database.php";
 
 $user = "CREATE TABLE IF NOT EXISTS users (".
 		"id int NOT NULL AUTO_INCREMENT,".
+		"active bool NOT NULL DEFAULT 0,".
 		"username varchar(40) NOT NULL UNIQUE,".
 		"email varchar(255) NOT NULL UNIQUE,".
 		"password varchar(1000) NOT NULL,".
