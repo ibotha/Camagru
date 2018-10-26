@@ -198,3 +198,10 @@ button:hover
 	text-align: right;
 	z-index: 3;
 }
+
+.big
+{
+	font-size: 40px;
+	color: white;
+	text-align: center;
+}

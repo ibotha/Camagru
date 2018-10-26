@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 function sendEmail($email, $verif)
 {
 	$to = $email;
@@ -11,7 +13,7 @@ function sendEmail($email, $verif)
 	<title>Verify your Camagru account</title>
 	</head>
 	<body>
-	<p>To Verify your Camagru account click <a href="http://localhost:8080/Camagru/verify.php?key='.$verif.'">here.</a></p>
+	<p>To Verify your Camagru account click <a href="http://localhost:8080/Camagru/?key='.$verif.'">here.</a></p>
 	</body>
 	</html>
 	';
@@ -39,28 +41,49 @@ else
 	$users_req->execute();
 	$users = $users_req->fetch(PDO:: FETCH_ASSOC);
 	if ($users)
-		echo "Username or Email Taken";
-	else
 	{
-		$verif = hash('sha256', time() + $_POST['username']);
-		$add = $conn->prepare("INSERT INTO users(username, email, `password`, verif) VALUES (:username, :email, :pwd, :verif)");
-		$add->bindParam(":username", $_POST['username']);
-		$add->bindParam(":email", $_POST['email']);
-		$add->bindParam(":pwd", $password);
-		$add->bindParam(":verif", $verif);
-		if (sendEmail($_POST['email'], $verif))
+		if ($_POST['state'] == 'login')
 		{
-			try
+			if ($users['password'] == $password)
 			{
-				$add->execute();
+				if ($users['active'] == 1)
+				{
+					$_SESSION['login'] = $users['username'];
+				}
+				else
+					echo "Account Not Verified";
 			}
-			catch(PDOExeption $e)
-			{
-				echo "Error: ".$e->message();
-			}
+			else echo "Password Incorrect";
 		}
 		else
-			echo "Failed to Send";
+			echo "Username or Email Taken";
+	}
+	else
+	{
+		if ($_POST['state'] == 'login')
+			echo "User Does Not Exist";
+		else
+		{
+			$verif = hash('sha256', time() + $_POST['username']);
+			$add = $conn->prepare("INSERT INTO users(username, email, `password`, verif) VALUES (:username, :email, :pwd, :verif)");
+			$add->bindParam(":username", $_POST['username']);
+			$add->bindParam(":email", $_POST['email']);
+			$add->bindParam(":pwd", $password);
+			$add->bindParam(":verif", $verif);
+			if (sendEmail($_POST['email'], $verif))
+			{
+				try
+				{
+					$add->execute();
+				}
+				catch(PDOExeption $e)
+				{
+					echo "Error: ".$e->message();
+				}
+			}
+			else
+				echo "Failed to Send";
+		}
 	}
 }
 ?>

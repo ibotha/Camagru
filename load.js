@@ -1,4 +1,4 @@
-var video, image, userstate;
+var video, image, userstate, pagestate;
 
 function runcam(){
 	video = document.getElementById('webcam');
@@ -49,6 +49,7 @@ function imagething()
 
 function loadCamera()
 {
+	pagestate = "camera";
 	var xhttp = new XMLHttpRequest();
 
 	xhttp.onreadystatechange = function()
@@ -70,6 +71,7 @@ function loadCamera()
 
 function loadFeed()
 {
+	pagestate = 'feed';
 	var xhttp = new XMLHttpRequest();
 
 	xhttp.onreadystatechange = function()
@@ -146,6 +148,8 @@ function login(username, password)
 	xhttp.open("POST", "signup.php", false);
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("username=" + username + "&email=" + email + "&password=" + password + "&state=login");
+	if (!isError())
+		location.reload();
 }
 
 function signup(username, email, password)
@@ -164,6 +168,23 @@ function signup(username, email, password)
 	xhttp.open("POST", "signup.php", false);
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("username=" + username + "&email=" + email + "&password=" + password + "&state=signup");
+}
+
+function logout()
+{
+	var xhttp = new XMLHttpRequest();
+
+
+	xhttp.onreadystatechange = function ()
+	{
+		if (this.responseText.length > 1)
+		{
+		}
+	};
+
+	xhttp.open("GET", "logout.php", true);
+	xhttp.send();
+	location.reload();
 }
 
 function displayError(message)
@@ -231,10 +252,12 @@ function submit()
 
 window.onload = function ()
 {
-	loadCamera();
+	if (pagestate != "verify")
+		loadCamera();
 	document.getElementById("Gallery").addEventListener("click", loadFeed);
 	document.getElementById("home").addEventListener("click", loadCamera);
 	document.getElementById("login").addEventListener("click", showLogin);
+	document.getElementById("logout").addEventListener("click", logout);
 	document.getElementById("signup").addEventListener("click", showSignup);
 	document.getElementById("submit").addEventListener("click", submit);
 	document.getElementById("error").addEventListener("click", clearError);

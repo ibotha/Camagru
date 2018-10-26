@@ -15,42 +15,43 @@
 			<button id="home">Camagaru</button>
 			<div id="userauth">
 				<button id="Gallery">Gallery</button>
-				<?php if ($_SESSION['login'])
-					echo '
-					<div class="field">
-						<p id="message">'.$_SESSION['login'].'</p>
-					</div>
-					<button id="logout">Logout</button>
-					<button id="profile">Profile</button>';
-					else echo '
-						<button id="login">Login</button>
-						<button id="signup">Sign Up</button>';
+				<button id="login">Login</button>
+				<button id="signup">Sign Up</button>
+				<button id="logout" style="display: none;">Logout</button>
+				<button id="profile" style="display: none;"><?php echo $_SESSION['login']; ?></button>
+				<?php
+					if ($_SESSION['login'])
+					{ ?>
+						<script>
+							document.getElementById("login").style.display = 'none';
+							document.getElementById("logout").style.display = 'initial';
+							document.getElementById("profile").style.display = 'initial';
+							document.getElementById("signup").style.display = 'none';
+						</script>
+					<?php }
 				?>
 			</div>
 			<div id="logindd">
 				<div class="field" id="error">
-					<p id="message">a</p>
+					<p id="message"></p>
 				</div>
 				<div class="field" id="username">
-					<p>Username</p>
-					<input id="usernameinput">
+					<input id="usernameinput" placeholder="Username">
 				</div>
 				<div class="field" id="email">
-					<p>Email</p>
-					<input id="emailinput" type="email">
+					<input id="emailinput" type="email" placeholder="Email">
 				</div>
 				<div class="field" id="password">
-					<p>Password</p>
-					<input id="passwordinput" type="password">
+					<input id="passwordinput" type="password" placeholder="Password">
 				</div>
 				<div class="field" id="confirm">
-					<p>Confirm Password</p>
-					<input id="confirminput" type="password">
+					<input id="confirminput" type="password" placeholder="Confirm Password">
 				</div>
 				<button id="submit">OK</button>
 			</div>
 		</div>
 		<div id=body></div>
+		<?php if($_GET["key"]) echo '<div id="keyholder" style="display: none;">'.$_GET["key"].'</div><script src="verify.js" type="text/javascript"></script>'; ?>
 		<div id="footer">
 			<div style="margin-right: 50px">&copy;ibotha 2018</div>
 		</div>
