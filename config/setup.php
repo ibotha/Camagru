@@ -28,7 +28,6 @@ $post = "CREATE TABLE IF NOT EXISTS posts (".
 		"uploaderID int NOT NULL,".
 		"description varchar(255),".
 		"creationDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,".
-		"comments varchar(1000),".
 		"stickers varchar(1000),".
 		"likes int NOT NULL DEFAULT 0,".
 		"PRIMARY KEY (id));";
@@ -57,6 +56,7 @@ catch(PDOException $e)
 $comment = "CREATE TABLE IF NOT EXISTS comments (".
 		"id int NOT NULL AUTO_INCREMENT,".
 		"uploaderID int NOT NULL,".
+		"postID int NOT NULL,".
 		"content varchar(1000) NOT NULL,".
 		"creationDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,".
 		"PRIMARY KEY (id));";

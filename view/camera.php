@@ -13,3 +13,8 @@
 		<button id="cancel">Cancel</button>
 	</div>
 </div>
+<script type="text/javascript">
+	<?php
+		echo @file_get_contents("./scripts/camera.js");
+	?>
+</script>

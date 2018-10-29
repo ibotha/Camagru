@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <?php
 	session_start();
-	//require "config/setup.php";
 ?>
 <html>
 	<head>
 		<title>Camagaru</title>
-		<link rel="stylesheet" href="home.css" type="text/css">
-		<script src="load.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="view/styles/home.css" type="text/css">
+		<script src="control/load.js" type="text/javascript"></script>
 	</head>
 	
 	<body>
@@ -28,8 +27,7 @@
 							document.getElementById("profile").style.display = 'initial';
 							document.getElementById("signup").style.display = 'none';
 						</script>
-					<?php }
-				?>
+				<?php } ?>
 			</div>
 			<div id="logindd">
 				<div class="field" id="error">
@@ -48,10 +46,12 @@
 					<input id="confirminput" type="password" placeholder="Confirm Password">
 				</div>
 				<button id="submit">OK</button>
+				<button id="forgot">Forgot Password?</button>
 			</div>
 		</div>
 		<div id=body></div>
-		<?php if($_GET["key"]) echo '<div id="keyholder" style="display: none;">'.$_GET["key"].'</div><script src="verify.js" type="text/javascript"></script>'; ?>
+		<?php if($_GET["key"]){ echo '<div id="keyholder" style="display: none;">'.$_GET["key"].'</div><script src="control/verify.js" type="text/javascript"></script>';}
+				if($_GET["forgot"]){ echo '<div id="forgotholder" style="display: none;">'.$_GET["forgot"].'</div><script src="control/verify.js" type="text/javascript"></script>';} ?>
 		<div id="footer">
 			<div style="margin-right: 50px">&copy;ibotha 2018</div>
 		</div>

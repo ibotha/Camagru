@@ -34,10 +34,9 @@ function imagething()
 			0, 0,
 			video.offsetWidth, video.offsetHeight
 		);
-		image.style.height    = parseInt( image.offsetWidth * tempScale );
+		image.style.height = parseInt(image.offsetWidth * tempScale);
 		image.width = video.offsetWidth;
 		image.height = video.offsetHeight;
-		console.log(image.height);
 		var context = image.getContext("2d"),
 			scale = image.width/temp.width;
 		context.scale(scale, scale);
@@ -49,7 +48,10 @@ function imagething()
 
 function loadCamera()
 {
-	pagestate = "camera";
+	if (pagestate == 'verify')
+	{
+		location.replace('index.php');
+	}
 	var xhttp = new XMLHttpRequest();
 
 	xhttp.onreadystatechange = function()
@@ -57,21 +59,25 @@ function loadCamera()
 		if (this.readyState == 4 && this.status == 200)
 		{
 			document.getElementById("body").innerHTML = this.responseText;
+
 			runcam();
 			document.getElementById("capture").addEventListener("click", imagething);
+			document.getElementById("cancel").addEventListener("click", loadCamera);
 			document.getElementById("image").style.display = "none";
 			document.getElementById("camoptions").style.display = "none";
-			document.getElementById("cancel").addEventListener("click", loadCamera);
 		}
 	};
-
-	xhttp.open("GET", "camera.php", true);
+	xhttp.open("GET", "view/camera.php", true);
 	xhttp.send();
+	pagestate = "camera";
 }
 
 function loadFeed()
 {
-	pagestate = 'feed';
+	if (pagestate == 'verify')
+	{
+		location.replace('index.php');
+	}
 	var xhttp = new XMLHttpRequest();
 
 	xhttp.onreadystatechange = function()
@@ -82,8 +88,28 @@ function loadFeed()
 		}
 	};
 
-	xhttp.open("GET", "feed.php", true);
+	xhttp.open("GET", "view/feed.php", true);
 	xhttp.send();
+	pagestate = 'feed';
+}
+
+function loadProfile()
+{
+	if (pagestate == 'verify')
+		window.location = 'index.php';
+	var xhttp = new XMLHttpRequest();
+
+	xhttp.onreadystatechange = function()
+	{
+		if (this.readyState == 4 && this.status == 200)
+		{
+			document.getElementById("body").innerHTML = this.responseText;
+		}
+	};
+	xhttp.open("POST", "view/profile.php", true);
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("username=" + this.innerHTML);
+	pagestate = "profile";
 }
 
 function showLogin()
@@ -99,6 +125,7 @@ function showLogin()
 	document.getElementById("email").style.display = "none";
 	document.getElementById("confirm").style.display = "none";
 	document.getElementById("submit").style.display = "block";
+	document.getElementById("forgot").style.display = "block";
 	userstate = "login";
 }
 
@@ -115,7 +142,25 @@ function showSignup()
 	document.getElementById("confirm").style.display = "block";
 	document.getElementById("email").style.display = "block";
 	document.getElementById("submit").style.display = "block";
+	document.getElementById("forgot").style.display = "none";
 	userstate = "signup";
+}
+
+function showForgot()
+{
+	if (userstate == "signup")
+	{
+		hide();
+		return;
+	}
+	hide();
+	document.getElementById("username").style.display = "none";
+	document.getElementById("password").style.display = "none";
+	document.getElementById("confirm").style.display = "none";
+	document.getElementById("email").style.display = "block";
+	document.getElementById("submit").style.display = "block";
+	document.getElementById("forgot").style.display = "none";
+	userstate = "forgot";
 }
 
 function isError()
@@ -145,11 +190,28 @@ function login(username, password)
 		}
 	};
 
-	xhttp.open("POST", "signup.php", false);
+	xhttp.open("POST", "modal/signup.php", false);
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("username=" + username + "&email=" + email + "&password=" + password + "&state=login");
 	if (!isError())
-		location.reload();
+		location.replace('index.php');
+}
+
+function forgot(email)
+{
+	var xhttp = new XMLHttpRequest();
+
+	xhttp.onreadystatechange = function ()
+	{
+		if (this.responseText.length > 1)
+		{
+			displayError(this.responseText);
+		}
+	};
+
+	xhttp.open("POST", "modal/signup.php", false);
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("email=" + email + "&state=forgot");
 }
 
 function signup(username, email, password)
@@ -165,7 +227,7 @@ function signup(username, email, password)
 		}
 	};
 
-	xhttp.open("POST", "signup.php", false);
+	xhttp.open("POST", "modal/signup.php", false);
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("username=" + username + "&email=" + email + "&password=" + password + "&state=signup");
 }
@@ -182,15 +244,16 @@ function logout()
 		}
 	};
 
-	xhttp.open("GET", "logout.php", true);
+	xhttp.open("GET", "modal/logout.php", true);
 	xhttp.send();
 	location.reload();
 }
 
 function displayError(message)
 {
-	document.getElementById("error").style.display = "block";
 	document.getElementById("message").innerHTML = message;
+	if (message)
+		document.getElementById("error").style.display = "block";
 }
 
 function hide()
@@ -214,40 +277,44 @@ function submit()
 	var password = document.getElementById("passwordinput").value;
 	var confirm = document.getElementById("confirminput").value;
 	var email = document.getElementById("emailinput").value;
-	if (!username || !password)
-	{
-		displayError("All Fields Required");
-		return;
-	}
 	if (userstate == "signup")
 	{
-		if (!confirm || !email)
+		if (!username || !password || !email || !confirm)
 		{
 			displayError("All Fields Required");
 			return;
 		}
-		if (confirm != password)
-		{
-			displayError("Passwords Don't Match");
-			return;
-		}
-	}
-	if (userstate == "signup")
-	{
 		signup(username, email, password);
 		if(isError())
 			return;
 	}
 	if (userstate == "login")
 	{
+		if ((!username || !password))
+		{
+			displayError("All Fields Required");
+			return;
+		}
 		login(username, password);
 		if(isError())
 		{
 			return;
 		}
 	}
+	if (userstate == "forgot")
+	{
+		if (!email)
+		{
+			displayError("All Fields Required");
+			return;
+		}
+		forgot(email);
+		if(isError())
+		{
+			return;
+		}
+	}
 	hide();
-	userstate = "loggedin";
 }
 
 window.onload = function ()
@@ -256,9 +323,11 @@ window.onload = function ()
 		loadCamera();
 	document.getElementById("Gallery").addEventListener("click", loadFeed);
 	document.getElementById("home").addEventListener("click", loadCamera);
+	document.getElementById("profile").addEventListener("click", loadProfile);
 	document.getElementById("login").addEventListener("click", showLogin);
 	document.getElementById("logout").addEventListener("click", logout);
 	document.getElementById("signup").addEventListener("click", showSignup);
 	document.getElementById("submit").addEventListener("click", submit);
+	document.getElementById("forgot").addEventListener("click", showForgot);
 	document.getElementById("error").addEventListener("click", clearError);
 };

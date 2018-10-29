@@ -10,6 +10,9 @@ xhttp.onreadystatechange = function()
 		document.getElementById("body").innerHTML = this.responseText;
 	}
 };
-xhttp.open("POST", "verify.php", true);
+xhttp.open("POST", "modal/verify.php", true);
 xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-xhttp.send("key=" + document.getElementById('keyholder').innerHTML);
+if (document.getElementById('keyholder'))
+	xhttp.send("key=" + document.getElementById('keyholder').innerHTML);
+else
+	xhttp.send("forgot=" + document.getElementById('forgotholder').innerHTML);
