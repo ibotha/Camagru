@@ -28,7 +28,7 @@ function sendEmail($email, $name, $username)
 	<body>
 	<p>'.$username.': To Verify your Camagru account click <a href="http://'.$_SERVER['HTTP_HOST'];
 	$path = explode('/', $_SERVER['SCRIPT_NAME']);
-	$length = count($path) - 1;
+	$length = count($path) - 2;
 	for ($i = 0; $i < $length; $i++)
 		$message .= '/'.$path[$i];
 	$message .= '?'.$name.'='.$verif.'">here</a>.</p>

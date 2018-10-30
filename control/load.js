@@ -171,6 +171,11 @@ function isError()
 		return true;
 }
 
+function getPageError()
+{
+	return document.getElementById("error").innerHTML;
+}
+
 function clearError()
 {
 	document.getElementById("error").style.display = "none";

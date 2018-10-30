@@ -24,14 +24,29 @@
 		echo '</p>';
 	}
 	else if ($_POST['forgot'])
-	{ ?>
-		<form method="post" action="index.php">
-		<div class="field" id="password" style="display: initial">
-			<input id="passwordinput" type="password" placeholder="Password">
+	{
+		$sql = "SELECT * FROM `users` WHERE verif = :verif LIMIT 1";
+		$users_req = $conn->prepare($sql);
+		$users_req->bindParam(":verif", $_POST['forgot']);
+		$users_req->execute();
+		$row = $users_req->fetch(PDO::FETCH_ASSOC);
+		if ($row) {
+			echo '<p class="big">'.$row['username'].' Please Complete The Following Form To Change Your Password</p>';
+?>
+		<div style="width: 40%; margin: auto;">
+			<div class="field" id="repassword" style="display: initial">
+				<input id="repasswordinput" type="password" placeholder="Password">
+			</div>
+			<div class="field" id="reconfirm" style="display: initial">
+				<input id="reconfirminput" type="password" placeholder="Confirm Password">
+			</div>
+			<div class="field" id="rename">
+				<input id="renameinput" value="<?php echo $row['username']; ?>">
+			</div>
+			<button type="submit" id="submit" style="display: initial" onclick="repasssubmit()">OK</button>
 		</div>
-		<div class="field" id="confirm" style="display: initial">
-			<input id="confirminput" type="password" placeholder="Confirm Password">
-		</div>
-		<button type="submit" id="submit" style="display: initial">OK</button>
-	<?php }
+		<?php }
+		else
+			echo '<p class="big">Invalid Verification key</p>';
+	}
 ?>

@@ -7,6 +7,7 @@
 		<title>Camagaru</title>
 		<link rel="stylesheet" href="view/styles/home.css" type="text/css">
 		<script src="control/load.js" type="text/javascript"></script>
+		<script src="control/change.js" type="text/javascript"></script>
 	</head>
 	
 	<body>
