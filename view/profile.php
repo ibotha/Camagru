@@ -8,7 +8,7 @@ $users_req->bindParam(":username", $_POST['username']);
 $users_req->execute();
 $row = $users_req->fetch();
 ?>
-<h1><?php print_r($row['username']); ?><h1>
+<h1><?php printf("%s<br/>%s", $row['username'], $row['email']); ?><h1>
 <div class="options" id="profile options" <?php if ($row['username'] != $_SESSION['login']) echo "style='display: none'";?>>
 	<button id="modify" onclick="showUpdate()">Modify Account</button>
 </div>

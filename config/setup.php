@@ -24,12 +24,11 @@ catch(PDOException $e)
 
 $post = "CREATE TABLE IF NOT EXISTS posts (".
 		"id int NOT NULL AUTO_INCREMENT,".
-		"imgID varchar(100) NOT NULL UNIQUE,".
+		"img BLOB(4294967295) NOT NULL,".
 		"uploaderID int NOT NULL,".
 		"description varchar(255),".
 		"creationDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,".
 		"stickers varchar(1000),".
-		"likes int NOT NULL DEFAULT 0,".
 		"PRIMARY KEY (id));";
 try
 {
@@ -42,7 +41,7 @@ catch(PDOException $e)
 
 $sticker = "CREATE TABLE IF NOT EXISTS stickers (".
 		"id int NOT NULL AUTO_INCREMENT,".
-		"imgID varchar(100) NOT NULL UNIQUE,".
+		"img BLOB(4294967295) NOT NULL,".
 		"PRIMARY KEY (id));";
 try
 {
@@ -67,5 +66,17 @@ try
 catch(PDOException $e)
 {
 	echo "Failed to create comment table: " . $e->getMessage();
+}
+
+$like = "CREATE TABLE IF NOT EXISTS likes (".
+		"uploaderID int NOT NULL,".
+		"postID int NOT NULL);";
+try
+{
+	$conn->exec($like);
+}
+catch(PDOException $e)
+{
+	echo "Failed to create like table: " . $e->getMessage();
 }
 ?>

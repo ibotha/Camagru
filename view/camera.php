@@ -2,19 +2,25 @@
 	<div id="camera">
 		<video autoplay="true" id="webcam"></video>
 		<canvas id="image"></canvas>
+		<div id="sticker"></div>
 	</div>
 	<button id="capture"></button>
-	<div class="options" id="upload">
-		<button id="uploadbutton">or upload an image</button>
+	<div id="camoptions">
+		<div class="field" style="display: initial;">
+			<div style="max-width: 500px; margin: 20px auto 20px auto;">
+				<input id="titleinput" placeholder="Title">
+			</div>
+		</div>
+		<div class="options">
+			<button id="post" class="greyed">Post</button>
+			<button id="cancel">Cancel</button>
+		</div>
 	</div>
-	<div class="options" id="camoptions">
-		<button id="stickers">Stickers</button>
-		<button id="post">Post</button>
-		<button id="cancel">Cancel</button>
+	<div id="stickers"></div>
+	<div id="upload">
+		<div class="options">
+			<p>Or Upload:</p>
+			<input type="file" accept="image/*" id="uploadinput">
+		</div>
 	</div>
 </div>
-<script type="text/javascript">
-	<?php
-		echo @file_get_contents("./scripts/camera.js");
-	?>
-</script>

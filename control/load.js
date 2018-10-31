@@ -20,7 +20,7 @@ function runcam(){
 function imagething()
 {
 	document.getElementById("image").style.display = "block";
-	document.getElementById("camoptions").style.display = "flex";
+	document.getElementById("camoptions").style.display = "block";
 	var temp = document.createElement('canvas');
 
 		temp.width  = video.offsetWidth;
@@ -46,6 +46,36 @@ function imagething()
 	document.getElementById("upload").style.display = "none";
 }
 
+function logimage(e)
+{
+	let file = null;
+
+	for (let i = 0; i < e.length; i++) {
+		if (e[i].type.match(/^image\//)) {
+		file = e[i];
+		break;
+		}
+	}
+
+	if (file !== null) {
+		document.getElementById("image").style.display = "block";
+		document.getElementById("camoptions").style.display = "block";
+
+		var img = new Image;
+		img.onload = function ()
+		{
+			image.getContext('2d').drawImage(img, 0, 0);
+		}
+
+		img.src = URL.createObjectURL(file);
+		console.log(img);
+
+		document.getElementById("webcam").style.display = "none";
+		document.getElementById("capture").style.display = "none";
+		document.getElementById("upload").style.display = "none";
+	}
+}
+
 function loadCamera()
 {
 	if (pagestate == 'verify')
@@ -65,6 +95,8 @@ function loadCamera()
 			document.getElementById("cancel").addEventListener("click", loadCamera);
 			document.getElementById("image").style.display = "none";
 			document.getElementById("camoptions").style.display = "none";
+			loadStickers();
+			document.getElementById("uploadinput").addEventListener('change', (e) => logimage(e.target.files));
 		}
 	};
 	xhttp.open("GET", "view/camera.php", true);
@@ -78,19 +110,58 @@ function loadFeed()
 	{
 		location.replace('index.php');
 	}
-	var xhttp = new XMLHttpRequest();
+	var xhttp2 = new XMLHttpRequest();
 
-	xhttp.onreadystatechange = function()
+	xhttp2.onreadystatechange = function()
 	{
 		if (this.readyState == 4 && this.status == 200)
 		{
 			document.getElementById("body").innerHTML = this.responseText;
+			loadPosts(0, 5);
+			document.getElementById("more").addEventListener("click", loadMore)
 		}
 	};
 
-	xhttp.open("GET", "view/feed.php", true);
-	xhttp.send();
+	xhttp2.open("GET", "view/feed.php", true);
+	xhttp2.send();
 	pagestate = 'feed';
+}
+
+function loadStickers()
+{
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function()
+	{
+		document.getElementById("stickers").innerHTML = 'LOADING STICKERS...';
+		if (this.readyState == 4 && this.status == 200)
+		{
+			document.getElementById("stickers").innerHTML = this.responseText;
+		}
+		else if (this.status == 404)
+			displayError("Page Not Found!");
+	};
+	xhttp.open("POST", "modal/getsticker.php", true);
+	xhttp.send();
+}
+
+function loadSticker(id)
+{
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function()
+	{
+		if (this.readyState == 4 && this.status == 200)
+		{
+			document.getElementById("sticker").innerHTML = this.responseText;
+			var sticks = document.getElementsByClassName("stick")
+			for (var i = 0; i < sticks.length; i++)
+				sticks[i].width = 200;
+		}
+		else if (this.status == 404)
+			displayError("Page Not Found!");
+	};
+	xhttp.open("POST", "modal/getsticker.php", true);
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("id=" + id);
 }
 
 function loadProfile()
@@ -105,6 +176,8 @@ function loadProfile()
 		{
 			document.getElementById("body").innerHTML = this.responseText;
 		}
+		else if (this.status == 404)
+			displayError("Page Not Found!");
 	};
 	xhttp.open("POST", "view/profile.php", true);
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -142,25 +215,24 @@ function showSignup()
 	document.getElementById("confirm").style.display = "block";
 	document.getElementById("email").style.display = "block";
 	document.getElementById("submit").style.display = "block";
-	document.getElementById("forgot").style.display = "none";
+	document.getElementById("resend").style.display = "block";
 	userstate = "signup";
 }
 
 function showForgot()
 {
-	if (userstate == "signup")
-	{
-		hide();
-		return;
-	}
 	hide();
-	document.getElementById("username").style.display = "none";
-	document.getElementById("password").style.display = "none";
-	document.getElementById("confirm").style.display = "none";
 	document.getElementById("email").style.display = "block";
 	document.getElementById("submit").style.display = "block";
-	document.getElementById("forgot").style.display = "none";
 	userstate = "forgot";
+}
+
+function showResend()
+{
+	hide();
+	document.getElementById("email").style.display = "block";
+	document.getElementById("submit").style.display = "block";
+	userstate = "resend";
 }
 
 function isError()
@@ -219,6 +291,23 @@ function forgot(email)
 	xhttp.send("email=" + email + "&state=forgot");
 }
 
+function resend(email)
+{
+	var xhttp = new XMLHttpRequest();
+
+	xhttp.onreadystatechange = function ()
+	{
+		if (this.responseText.length > 1)
+		{
+			displayError(this.responseText);
+		}
+	};
+
+	xhttp.open("POST", "modal/signup.php", false);
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("email=" + email + "&state=resend");
+}
+
 function signup(username, email, password)
 {
 	var xhttp = new XMLHttpRequest();
@@ -268,6 +357,8 @@ function hide()
 	document.getElementById("confirm").style.display = "none";
 	document.getElementById("email").style.display = "none";
 	document.getElementById("submit").style.display = "none";
+	document.getElementById("forgot").style.display = "none";
+	document.getElementById("resend").style.display = "none";
 	document.getElementById("usernameinput").value = "";
 	document.getElementById("passwordinput").value = "";
 	document.getElementById("confirminput").value = "";
@@ -319,11 +410,35 @@ function submit()
 			return;
 		}
 	}
+	if (userstate == "resend")
+	{
+		if (!email)
+		{
+			displayError("All Fields Required");
+			return;
+		}
+		resend(email);
+		if(isError())
+			return;
+	}
 	hide();
 }
 
 window.onload = function ()
 {
+	var xhttp1 = new XMLHttpRequest();
+	xhttp1.onreadystatechange = function()
+	{
+		if (this.readyState == 4 && this.status == 200)
+		{
+			imgNo = parseInt(this.responseText);
+		}
+		else if (this.status == 404)
+			displayError("Page Not Found!");
+	};
+	xhttp1.open("GET", "modal/getimagecount.php", true);
+	xhttp1.send();
+
 	if (pagestate != "verify")
 		loadCamera();
 	document.getElementById("Gallery").addEventListener("click", loadFeed);
@@ -334,5 +449,30 @@ window.onload = function ()
 	document.getElementById("signup").addEventListener("click", showSignup);
 	document.getElementById("submit").addEventListener("click", submit);
 	document.getElementById("forgot").addEventListener("click", showForgot);
+	document.getElementById("resend").addEventListener("click", showResend);
 	document.getElementById("error").addEventListener("click", clearError);
 };
+
+function comment(id)
+{
+	var posts = document.getElementsByClassName("comment");
+	for (var i = 0; i < posts.length; i++)
+	{
+		if (posts[i].getAttribute('id') == id)
+		{
+			var ret = posts[i].value;
+			posts[i].value = "";
+		}
+	}
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function()
+	{
+		if (this.readyState == 4 && this.status == 200)
+			displayError(this.responseText);
+		if (this.status == 404)
+			displayError("Page Not Found!");
+	};
+	xhttp.open("POST", "modal/comment.php", true);
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("content=" + ret + "&post=" + id);
+}

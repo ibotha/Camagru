@@ -8,20 +8,20 @@ function repasssubmit()
 	var xhttp = new XMLHttpRequest();
 	if (password == confirm)
 	{
-		if (this.readyState == 4 && this.status == 200)
-		{
 			xhttp.onreadystatechange = function ()
 			{
-				displayError(this.responseText);
+				if (this.readyState == 4 && this.status == 200)
+				{
+					displayError(this.responseText);
+				}
+				else if (this.status == 404)
+					displayError("Page Not Found!");
 			};
 			xhttp.open("POST", "modal/updateuser.php", false);
 			xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhttp.send("name=" + name + "&update=" + password + "&toupdate=password");
+			xhttp.send("name=" + name + "&update=" + password + "&toupdate=repassword");
 			if (!isError())
 				location.replace("index.php");
-		}
-		else if (this.status == 404)
-			displayError("Page Not Found!");
 	}
 	else displayError("Passwords Do Not Match");
 }
@@ -63,61 +63,61 @@ function updatePart(which, name)
 		oldpassword = document.getElementById('upoldpassword').value,
 		email = document.getElementById('upemail').value,
 		username = document.getElementById('upusername').value;
-	console.log(password + " " + confirm + " " + oldpassword + "::" + email + ";;" + username + "==" + which + "\\\\" + name);
-	/*switch (which)
+	switch (which)
 	{
 		case 'username':
 			var xhttp = new XMLHttpRequest();
-			if (this.readyState == 4 && this.status == 200)
+			xhttp.onreadystatechange = function ()
 			{
-				xhttp.onreadystatechange = function ()
+				if (this.readyState == 4 && this.status == 200)
 				{
 					displayError(this.responseText);
-				};
-				xhttp.open("POST", "modal/updateuser.php", false);
-				xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-				xhttp.send("name=" + name + "&update=" + username + "&toupdate=username");
-				if (!isError())
-					location.replace("index.php");
-			}
-			else if (this.status == 404)
-				displayError("Page Not Found!");
+				}
+				else if (this.status == 404)
+					displayError("Page Not Found!");
+			};
+			xhttp.open("POST", "modal/updateuser.php", false);
+			xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			console.log("username");
+			xhttp.send("name=" + name + "&update=" + username + "&toupdate=username");
 			break;
 		case 'email':
 			var xhttp = new XMLHttpRequest();
-			if (this.readyState == 4 && this.status == 200)
+			xhttp.onreadystatechange = function ()
 			{
-				xhttp.onreadystatechange = function ()
+				if (this.readyState == 4 && this.status == 200)
 				{
 					displayError(this.responseText);
-				};
-				xhttp.open("POST", "modal/updateuser.php", false);
-				xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-				xhttp.send("name=" + name + "&update=" + password + "&toupdate=password");
-				if (!isError())
-					location.replace("index.php");
-			}
-			else if (this.status == 404)
-				displayError("Page Not Found!");
+				}
+				else if (this.status == 404)
+					displayError("Page Not Found!");	
+			};
+			xhttp.open("POST", "modal/updateuser.php", false);
+			xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			xhttp.send("name=" + name + "&update=" + email + "&toupdate=email");
 			break;
 		case 'password':
-			var xhttp = new XMLHttpRequest();
-			if (this.readyState == 4 && this.status == 200)
+			if (password == confirm)
 			{
+				var xhttp = new XMLHttpRequest();
 				xhttp.onreadystatechange = function ()
 				{
-					displayError(this.responseText);
+					if (this.readyState == 4 && this.status == 200)
+					{
+						displayError(this.responseText);
+					}
+					else if (this.status == 404)
+						displayError("Page Not Found!");
 				};
 				xhttp.open("POST", "modal/updateuser.php", false);
 				xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-				xhttp.send("name=" + name + "&update=" + password + "&toupdate=password");
-				if (!isError())
-					location.replace("index.php");
+				xhttp.send("name=" + name + "&update=" + password + "&toupdate=password" + "&oldpassword=" + oldpassword);
 			}
-			else if (this.status == 404)
-				displayError("Page Not Found!");
+			else displayError("Passwords do not match");
 			break;
 		default:
 			break;
-	}*/
+	}
+	if (!isError())
+		location.replace("index.php");
 }

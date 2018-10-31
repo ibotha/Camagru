@@ -4,15 +4,17 @@
 ?>
 <html>
 	<head>
-		<title>Camagaru</title>
+		<title>Camagru</title>
 		<link rel="stylesheet" href="view/styles/home.css" type="text/css">
 		<script src="control/load.js" type="text/javascript"></script>
 		<script src="control/change.js" type="text/javascript"></script>
+		<script src="control/image.js" type="text/javascript"></script>
+		<script src="control/posts.js" type="text/javascript"></script>
 	</head>
 	
 	<body>
 		<div id="header">
-			<button id="home">Camagaru</button>
+			<button id="home">Camagru</button>
 			<div id="userauth">
 				<button id="Gallery">Gallery</button>
 				<button id="login">Login</button>
@@ -48,6 +50,7 @@
 				</div>
 				<button id="submit">OK</button>
 				<button id="forgot">Forgot Password?</button>
+				<button id="resend">Resend Verification</button>
 			</div>
 		</div>
 		<div id=body></div>
