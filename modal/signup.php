@@ -19,14 +19,14 @@ function sendEmail($email, $name, $username)
 	}
 	$to = $email;
 	
-	$subject = 'Verify Your Camagru Account';
+	$subject = (($name == 'key') ? 'Verify Your Camagru Account' : 'Reset Your Camagru Password');
 	$message = '
 	<html>
 	<head>
-	<title>Verify your Camagru account</title>
+	<title>'.(($name == 'key') ? 'Verify Your Camagru Account' : 'Reset Your Camagru Password').'</title>
 	</head>
 	<body>
-	<p>'.$username.': To Verify your Camagru account click <a href="http://'.$_SERVER['HTTP_HOST'];
+	<p>'.$username.': To '.(($name == 'key') ? 'Verify Your Camagru Account' : 'Reset Your Camagru Password').' click <a href="http://'.$_SERVER['HTTP_HOST'];
 	$path = explode('/', $_SERVER['SCRIPT_NAME']);
 	$length = count($path) - 2;
 	for ($i = 0; $i < $length; $i++)
@@ -44,7 +44,24 @@ function sendEmail($email, $name, $username)
 set_include_path ("../");
 require 'config/setup.php';
 $password = hash('whirlpool', $_POST['password']);
-if ($_POST['state'] == 'forgot')
+if ($_POST['state'] == 'resend')
+{
+	$users_req = $conn->prepare("SELECT * FROM `users` WHERE `email` = :email LIMIT 1");
+	$users_req->bindParam(":email", $_POST['email']);
+	$users_req->execute();
+	$user = $users_req->fetch(PDO::FETCH_ASSOC);
+	if (!$user)
+	{
+		echo "email not registered";
+		return ;
+	}
+	if ($user['active'])
+	{
+		echo "email already active";
+		return ;
+	}
+	sendEmail($user['email'], 'key', $user['username']);
+} else if ($_POST['state'] == 'forgot')
 {
 	$users_req = $conn->prepare("SELECT * FROM `users` WHERE `email` = :email LIMIT 1");
 	$users_req->bindParam(":email", $_POST['email']);

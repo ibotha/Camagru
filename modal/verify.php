@@ -1,9 +1,9 @@
 <?php
+	echo '<p class="big">';
 	set_include_path("../");
 	require 'config/setup.php';
 	if ($_POST['key'])
 	{
-		echo '<p class="big">';
 		$sql = "SELECT * FROM `users` WHERE verif = :verif LIMIT 1";
 		$users_req = $conn->prepare($sql);
 		$users_req->bindParam(":verif", $_POST['key']);
@@ -11,7 +11,7 @@
 		$row = $users_req->fetch(PDO::FETCH_ASSOC);
 		if ($row)
 		{
-			$activate = "UPDATE users SET `active` = 1 WHERE verif = :verif LIMIT 1;";
+			$activate = 'UPDATE users SET `active` = 1, `verif` = \''.hash('SHA256', rand(0, 200000)).'\' WHERE verif = :verif LIMIT 1;';
 			$act = $conn->prepare($activate);
 			$act->bindParam(":verif", $_POST['key']);
 			$act->execute();
@@ -21,7 +21,6 @@
 		{
 			echo 'Invalid Verification key';
 		}
-		echo '</p>';
 	}
 	else if ($_POST['forgot'])
 	{
@@ -31,7 +30,7 @@
 		$users_req->execute();
 		$row = $users_req->fetch(PDO::FETCH_ASSOC);
 		if ($row) {
-			echo '<p class="big">'.$row['username'].' Please Complete The Following Form To Change Your Password</p>';
+			echo $row['username'].' Please Complete The Following Form To Change Your Password';
 ?>
 		<div style="width: 40%; margin: auto;">
 			<div class="field" id="repassword" style="display: initial">
@@ -47,6 +46,7 @@
 		</div>
 		<?php }
 		else
-			echo '<p class="big">Invalid Verification key</p>';
+			echo 'Invalid Verification key';
 	}
+	echo '</p>';
 ?>

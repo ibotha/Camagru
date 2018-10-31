@@ -1,0 +1,59 @@
+<?php
+	set_include_path ("../");
+	require 'config/setup.php';
+	$statement = $conn->prepare("SELECT * FROM posts LIMIT ".$_POST['offset'].",".$_POST['amount'].";");
+	$statement->execute();
+	$posts = $statement->fetchAll();
+
+	$users_req = $conn->prepare("SELECT * FROM `users` WHERE `username` = :username LIMIT 1");
+	$users_req->bindParam(":username", $_POST['name']);
+	$users_req->execute();
+	$user = $users_req->fetch(PDO::FETCH_ASSOC);
+
+	foreach ($posts as $post)
+	{
+?>
+<div class="post">
+	<div class="uploader"><?php
+			$uploader = $conn->prepare("SELECT * FROM users WHERE id = :id;");
+			$uploader->bindParam(":id", $post['uploaderID']);
+			$uploader->execute();
+			print($uploader->fetch()['username']);
+		?></div>
+	<div class="posttitle"><?php echo $post['description']; ?></div>
+	<img class="postimg" src="<?php echo $post['img']; ?>">
+	<div class="options" id="post<?php echo $post['id'] ?>" style="height: 40px;">
+		<p class="likes"><?php
+			$likes = $conn->prepare("SELECT COUNT(*) FROM likes WHERE postID = :id;");
+			$likes->bindParam(":id", $post['id']);
+			$likes->execute();
+			print($likes->fetch()[0]);
+		?></p>
+		<?php
+			echo "<button ";
+			if ($user)
+			{
+				$like = $conn->prepare("SELECT * FROM likes WHERE postID = :id AND uploaderID = :upID;");
+				$like->bindParam(":id", $post['id']);
+				$like->bindParam(":upID", $user['id']);
+				$like->execute();
+				if ($like->fetch())
+					echo 'style="background-color: rgba(255, 255, 255, 0.5);" onclick="dislike(this, \''.$post['id'].'\', \''.$user['id'].'\')">Like';
+				else
+					echo 'onclick="like(this, \''.$post['id'].'\', \''.$user['id'].'\')">Like';
+			}
+			else
+				echo 'class="greyed">Like';
+		?></button>
+		<?php
+			echo "<button ";
+			if ($user)
+			{
+					echo ">Comment";
+			}
+			else
+				echo 'class="greyed">Comment';
+		?></button>
+	</div>
+</div>
+<?php	} ?>
