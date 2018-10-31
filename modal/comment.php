@@ -1,14 +1,11 @@
 <?php
 	set_include_path ("../");
 	require 'config/setup.php';
-
 	session_start();
-	
+
 	if (isset($_SESSION['login']))
 	{
-		$img = $_POST['img'];
-
-		$img = str_replace(" ", "+", $img);
+		$message = $_POST['content'];
 
 		$users_req = $conn->prepare("SELECT * FROM `users` WHERE `username` = :username LIMIT 1");
 		$users_req->bindParam(":username", $_SESSION['login']);
@@ -17,11 +14,10 @@
 
 		if ($user)
 		{
-			$statement = $conn->prepare("INSERT INTO posts(`img`, `description`, `uploaderID`, `stickers`) VALUE (:img, :title, :ID, :sticker)");
-			$statement->bindParam(":img", $img);
-			$statement->bindParam(":title", $_POST['title']);
-			$statement->bindParam(":sticker", $_POST['sticker']);
-			$statement->bindParam(":ID", $user['id']);
+			$statement = $conn->prepare("INSERT INTO comments(`uploaderID`, `postID`, `content`) VALUE (:user, :post, :content)");
+			$statement->bindParam(":post", $_POST['post']);
+			$statement->bindParam(":user", $user['id']);
+			$statement->bindParam(":content", $message);
 			$statement->execute();
 		}
 		else echo "Must Log In";

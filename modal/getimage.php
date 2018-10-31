@@ -1,19 +1,24 @@
 <?php
 	set_include_path ("../");
 	require 'config/setup.php';
+	session_start();
 	$statement = $conn->prepare("SELECT * FROM posts LIMIT ".$_POST['offset'].",".$_POST['amount'].";");
 	$statement->execute();
 	$posts = $statement->fetchAll();
 
-	$users_req = $conn->prepare("SELECT * FROM `users` WHERE `username` = :username LIMIT 1");
-	$users_req->bindParam(":username", $_POST['name']);
-	$users_req->execute();
-	$user = $users_req->fetch(PDO::FETCH_ASSOC);
+	if ($_SESSION['login'])
+	{
+		$users_req = $conn->prepare("SELECT * FROM `users` WHERE `username` = :username LIMIT 1");
+		$users_req->bindParam(":username", $_SESSION['login']);
+		$users_req->execute();
+		$user = $users_req->fetch(PDO::FETCH_ASSOC);
+	}
+	else $user = NULL;
 
 	foreach ($posts as $post)
 	{
 ?>
-<div class="post">
+<div class="post" id="<?php echo $post['id']; ?>">
 	<div class="uploader"><?php
 			$uploader = $conn->prepare("SELECT * FROM users WHERE id = :id;");
 			$uploader->bindParam(":id", $post['uploaderID']);
@@ -44,16 +49,16 @@
 			}
 			else
 				echo 'class="greyed">Like';
-		?></button>
-		<?php
-			echo "<button ";
-			if ($user)
-			{
-					echo ">Comment";
-			}
-			else
-				echo 'class="greyed">Comment';
+			if ($user['id'] == $post['uploaderID'])
+				echo "<button onclick='deleteimage(".$post['id'].")'>Delete</button>"
 		?></button>
 	</div>
+	<?php
+		if ($user)
+			echo "<textarea class='comment' id='".$post['id']."' placeholder='comment...'></textarea>".
+			"<div class='options'>".
+			"<button onclick='comment(".$post['id'].")'>Comment</button>".
+			"</div>";
+	?>
 </div>
 <?php	} ?>
