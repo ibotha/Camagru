@@ -15,6 +15,7 @@ $row = $users_req->fetch();
 <div id="updatecontainer" style="display: none;">
 	<h1>Update</h1>
 	<div class="options" id="update" <?php if ($row['username'] != $_SESSION['login']) echo "style='display: none'";?>>
+		<div><span style="font-size: 20px;">Notifications:</span><input id="notifications" type="checkbox" <?php if($row['notify']) echo 'checked'; ?>></div>
 		<button id="upname" onclick="showUpdateFields('username')">Username</button>
 		<button id="upmail" onclick="showUpdateFields('email')">Email</button>
 		<button id="uppwd" onclick="showUpdateFields('password')">Password</button>

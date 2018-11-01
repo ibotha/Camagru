@@ -4,11 +4,11 @@ set_include_path ("../");
 require 'config/setup.php';
 $password = hash('whirlpool', $_POST['password']);
 
-$users_req = $conn->prepare("SELECT * FROM `users` WHERE `username` = :username LIMIT 1");
-$users_req->bindParam(":username", $_POST['name']);
+$users_req = $conn->prepare("SELECT * FROM `users` WHERE `username` = :username OR `verif` = :verif LIMIT 1");
+$users_req->bindParam(":username", $_SESSION['login']);
+$users_req->bindParam(":verif", $_POST['key']);
 $users_req->execute();
 $user = $users_req->fetch(PDO::FETCH_ASSOC);
-
 if ($user)
 {
 	if ($_POST['toupdate'] == 'repassword')
@@ -23,9 +23,9 @@ if ($user)
 		}
 		else
 		{
-			$req = $conn->prepare("UPDATE `users` SET `password` = :pwd verif = ".hash('SHA256', rand(0, 200000))." WHERE `username` = :username LIMIT 1");
+			$req = $conn->prepare('UPDATE `users` SET `password` = :pwd, `verif` = \''.hash('SHA256', rand(0, 200000)).'\' WHERE `verif` = :verif LIMIT 1');
 			$req->bindParam(":pwd", hash('whirlpool', $_POST['update']));
-			$req->bindParam(":username", $_POST['name']);
+			$req->bindParam(":verif", $_POST['key']);
 			try
 			{
 				$req->execute();
@@ -51,7 +51,7 @@ if ($user)
 		{
 			$req = $conn->prepare("UPDATE `users` SET `password` = :pwd WHERE `username` = :username LIMIT 1");
 			$req->bindParam(":pwd", hash('whirlpool', $_POST['update']));
-			$req->bindParam(":username", $_POST['name']);
+			$req->bindParam(":username", $_SESSION['login']);
 			try
 			{
 				$req->execute();
@@ -74,7 +74,7 @@ if ($user)
 		{
 			$req = $conn->prepare("UPDATE `users` SET `username` = :new WHERE `username` = :username LIMIT 1");
 			$req->bindParam(":new", $_POST['update']);
-			$req->bindParam(":username", $_POST['name']);
+			$req->bindParam(":username", $_SESSION['login']);
 			try
 			{
 				$req->execute();
@@ -90,7 +90,7 @@ if ($user)
 	{
 		$req = $conn->prepare("UPDATE `users` SET `email` = :new WHERE `username` = :username LIMIT 1");
 		$req->bindParam(":new", $_POST['update']);
-		$req->bindParam(":username", $_POST['name']);
+		$req->bindParam(":username", $_SESSION['login']);
 		try
 		{
 			$req->execute();

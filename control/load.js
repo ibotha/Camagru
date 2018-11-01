@@ -178,6 +178,7 @@ function loadProfile()
 		if (this.readyState == 4 && this.status == 200)
 		{
 			document.getElementById("body").innerHTML = this.responseText;
+			document.getElementById("notifications").addEventListener('change', (e) => changeNotify(e.target.checked));
 		}
 		else if (this.status == 404)
 			displayError("Page Not Found!");
@@ -469,8 +470,13 @@ function comment(id)
 		if (posts[i].getAttribute('id') == id)
 		{
 			var ret = posts[i].value;
+			ret = ret.trim();
 			posts[i].value = "";
 		}
+	}
+	if (!ret.length)
+	{
+		return;
 	}
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function()
@@ -483,5 +489,5 @@ function comment(id)
 	xhttp.open("POST", "modal/comment.php", true);
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("content=" + ret + "&post=" + id);
-	document.getElementById("com" + id).innerHTML += '<p class="com">' + ret + '</p>';
+	document.getElementById("com" + id).innerHTML += '<p class="com">' + ret.replace(/</g, "&lt;") + '</p>';
 }

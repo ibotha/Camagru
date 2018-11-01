@@ -40,7 +40,7 @@
 				<input id="reconfirminput" type="password" placeholder="Confirm Password">
 			</div>
 			<div class="field" id="rename">
-				<input id="renameinput" value="<?php echo $row['username']; ?>">
+				<input id="reverifinput" value="<?php echo $row['verif']; ?>">
 			</div>
 			<button type="submit" id="submit" style="display: initial" onclick="repasssubmit()">OK</button>
 		</div>

@@ -10,8 +10,7 @@ $user = "CREATE TABLE IF NOT EXISTS users (".
 		"password varchar(1000) NOT NULL,".
 		"creationDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,".
 		"verif varchar(1000) NOT NULL,".
-		"likes varchar(1000) NOT NULL DEFAULT 0,".
-		"comments varchar(1000) NOT NULL DEFAULT 0,".
+		"notify BOOL NOT NULL DEFAULT false,".
 		"PRIMARY KEY (id));";
 try
 {

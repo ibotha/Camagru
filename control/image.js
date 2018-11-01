@@ -6,6 +6,7 @@ function saveCapture()
 		xhttp = new XMLHttpRequest(),
 		stick = curSticker.split(":"),
 		imgdat = "";
+		stick.sort();
 	for (var i = 0; i < stick.length; i++)
 	{
 		var img = document.getElementById("stick" + stick[i]),
@@ -38,7 +39,7 @@ function saveCapture()
 			else if (this.status == 404)
 				displayError("Page Not Found!");
 		};
-		xhttp.open("POST", "modal/saveimage.php", false);
+		xhttp.open("POST", "modal/saveimage.php");
 		xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		xhttp.send("img=" + imgData + "&title=" + title + "&sticker=" + imgdat);
 	}

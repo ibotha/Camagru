@@ -3,10 +3,6 @@ var curOffset, imgNo, curSticker;
 function loadPosts(offset, amount)
 {
 	curOffset = offset + amount;
-	if (imgNo <= curOffset)
-		document.getElementById("moreblock").style.display = 'none';
-	else
-		document.getElementById("moreblock").style.display = 'initial';
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function()
 	{
@@ -15,6 +11,10 @@ function loadPosts(offset, amount)
 		{
 			document.getElementById("loading").innerHTML = "";
 			document.getElementById("posts").innerHTML += this.responseText;
+			if (imgNo <= curOffset)
+				document.getElementById("more").style.display = 'none';
+			else
+				document.getElementById("more").style.display = 'initial';
 		}
 		else if (this.status == 404)
 			displayError("Page Not Found!");
@@ -91,7 +91,6 @@ function cleanCurSticker()
 		}
 	}
 	curSticker = ret;
-	console.log(curSticker);
 }
 
 function deselectSticker(id)

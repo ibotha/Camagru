@@ -25,7 +25,7 @@
 			$uploader->execute();
 			print($uploader->fetch()['username']);
 		?></div>
-	<div class="posttitle"><?php echo $post['description']; ?></div>
+	<div class="posttitle"><?php echo str_replace("<", "&lt;", $post['description']); ?></div>
 	<img class="postimg" src="<?php echo $post['img']; ?>">
 	<div class="options" id="post<?php echo $post['id'] ?>" style="height: 40px;">
 		<p class="likes"><?php
@@ -61,7 +61,7 @@
 			$comments = $like->fetchAll();
 			foreach ($comments as $comment)
 			{
-				echo '<p class="com">'.$comment['content'].'</p>';
+				echo '<p class="com">'.str_replace("<", "&lt;", $comment['content']).'</p>';
 			}
 		?>
 	</div>

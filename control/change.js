@@ -3,7 +3,8 @@ function repasssubmit()
 	clearError();
 	var password = document.getElementById('repasswordinput').value,
 		confirm = document.getElementById('reconfirminput').value,
-		name = document.getElementById('renameinput').value;
+		verif = document.getElementById('reverifinput').value;
+		console.log(verif);
 	
 	var xhttp = new XMLHttpRequest();
 	if (password == confirm)
@@ -19,7 +20,7 @@ function repasssubmit()
 			};
 			xhttp.open("POST", "modal/updateuser.php", false);
 			xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhttp.send("name=" + name + "&update=" + password + "&toupdate=repassword");
+			xhttp.send("key=" + verif + "&update=" + password + "&toupdate=repassword");
 			if (!isError())
 				location.replace("index.php");
 	}
@@ -120,4 +121,19 @@ function updatePart(which, name)
 	}
 	if (!isError())
 		location.replace("index.php");
+}
+
+function changeNotify(e)
+{
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function()
+	{
+		if (this.readyState == 4 && this.status == 200)
+			displayError(this.responseText);
+		if (this.status == 404)
+			displayError("Page Not Found!");
+	};
+	xhttp.open("POST", "modal/changeNotify.php", true);
+	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhttp.send("note=" + e);
 }

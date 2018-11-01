@@ -17,16 +17,17 @@
 			if ($spli)
 			{
 				$img = imagecreatefromstring($img);
-				$stick = imagecreatefromstring(base64_decode(preg_replace("/ /", "+", $spli)));
+				$stick = base64_decode(preg_replace("/ /", "+", $spli));
+				$size = getimagesizefromstring($stick);
+				$stick = imagecreatefromstring($stick);
 				imagealphablending($img, true);
 				imagesavealpha($img, true);
 				imagesavealpha($stick, true);
-				imagecopy($img, $stick, 20, 20, 0, 0, 200, 230);
+				imagecopy($img, $stick, 20, 20, 0, 0, $size[0], $size[1]);
 				imagepng($img, 'save.png');
 				$img = file_get_contents('save.png');
 			}
 		}
-
 		$users_req = $conn->prepare("SELECT * FROM `users` WHERE `username` = :username LIMIT 1");
 		$users_req->bindParam(":username", $_SESSION['login']);
 		$users_req->execute();
@@ -34,13 +35,16 @@
 
 		if ($user)
 		{
+			$img = base64_encode($img);
+			$img = "data:image/png;base64,".$img;
 			$statement = $conn->prepare("INSERT INTO posts(`img`, `description`, `uploaderID`) VALUE (:img, :title, :ID)");
-			$statement->bindParam(":img", "data:image/png;base64,".base64_encode($img));
+			$statement->bindParam(":img", preg_replace("/ /", "+", $img));
 			$statement->bindParam(":title", $_POST['title']);
 			$statement->bindParam(":ID", $user['id']);
 			$statement->execute();
 		}
 		else echo "Must Log In";
+		unlink('save.png');
 	}
 	else echo "Must Log In";
 ?>
