@@ -32,7 +32,7 @@ function loadMore()
 function selectSticker(id)
 {
 	id = id.toString();
-	document.getElementById("post").style.color = "white";
+	document.getElementById("post").className = "";
 	document.getElementById("post").addEventListener("click", saveCapture);
 	document.getElementById("sticker").width = video.offsetWidth;
 	document.getElementById("sticker").height = video.offsetHeight;
@@ -97,8 +97,6 @@ function cleanCurSticker()
 function deselectSticker(id)
 {
 	id = id.toString();
-	document.getElementById("post").style.color = "white";
-	document.getElementById("post").addEventListener("click", saveCapture);
 	document.getElementById("sticker").width = video.offsetWidth;
 	document.getElementById("sticker").height = video.offsetHeight;
 	curSticker += ":" + id + "!";
@@ -116,7 +114,13 @@ function deselectSticker(id)
 		}
 	}
 	if (curSticker)
+	{
 		loadSticker(curSticker);
+	}
 	else
+	{
 		loadSticker('-1');
+		document.getElementById("post").removeEventListener("click", saveCapture);
+		document.getElementById("post").className = "greyed";
+	}
 }

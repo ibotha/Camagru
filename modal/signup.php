@@ -114,22 +114,27 @@ else
 	}
 	else
 	{
-		$add = $conn->prepare("INSERT INTO users(username, email, `password`, verif) VALUES (:username, :email, :pwd, :verif)");
-		$add->bindParam(":username", $_POST['username']);
-		$add->bindParam(":email", $_POST['email']);
-		$add->bindParam(":pwd", $password);
-		$a = '0';
-		$add->bindParam(":verif", $a);
-		try
+		if ($_POST['state'] == 'signup')
 		{
-			$add->execute();
+			$add = $conn->prepare("INSERT INTO users(username, email, `password`, verif) VALUES (:username, :email, :pwd, :verif)");
+			$add->bindParam(":username", $_POST['username']);
+			$add->bindParam(":email", $_POST['email']);
+			$add->bindParam(":pwd", $password);
+			$a = '0';
+			$add->bindParam(":verif", $a);
+			try
+			{
+				$add->execute();
+			}
+			catch(PDOExeption $e)
+			{
+				echo "Error: ".$e->message();
+			}
+			if (!sendEmail($_POST['email'], "key", $_POST['username']))
+				echo "Failed to Send";
 		}
-		catch(PDOExeption $e)
-		{
-			echo "Error: ".$e->message();
-		}
-		if (!sendEmail($_POST['email'], "key", $_POST['username']))
-			echo "Failed to Send";
+		else if ($_POST['state'] == 'login')
+			echo "Invalid Username";
 	}
 }
 ?>

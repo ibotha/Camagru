@@ -4,6 +4,9 @@
 	$statement = $conn->prepare("DELETE FROM `likes` WHERE postID = :post");
 	$statement->bindParam(":post", $_POST['id']);
 	$statement->execute();
+	$statement = $conn->prepare("DELETE FROM `comments` WHERE postID = :post");
+	$statement->bindParam(":post", $_POST['id']);
+	$statement->execute();
 	$statement = $conn->prepare("DELETE FROM `posts` WHERE id = :post");
 	$statement->bindParam(":post", $_POST['id']);
 	$statement->execute();

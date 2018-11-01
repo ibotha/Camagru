@@ -283,3 +283,11 @@ button:focus {outline:0;}
 	resize: none;
 	overflow-y: auto;
 }
+
+.com
+{
+	border-bottom: 1px solid white;
+	color: lightgray;
+	width: 90%;
+	margin: 8px auto;
+}

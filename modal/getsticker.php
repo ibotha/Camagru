@@ -27,6 +27,6 @@
 	{
 ?>
 <?php if (!isset($_POST['id'])) { ?><button class="sticker" onclick="selectSticker(<?php echo $post['id']; ?>)" id="<?php echo $post['id']; ?>"><?php } ?>
-	<img <?php if (isset($_POST['id'])) echo 'class="stick"'; ?>src="<?php echo $post['img']; ?>">
+	<img <?php if (isset($_POST['id'])) echo 'class="stick"'; ?>src="<?php echo $post['img']; ?>" id="stick<?php echo $post['id']; ?>">
 	<?php if (!isset($_POST['id'])) { ?> </button> <?php } ?>
 <?php	} ?>

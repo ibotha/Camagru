@@ -28,7 +28,6 @@ $post = "CREATE TABLE IF NOT EXISTS posts (".
 		"uploaderID int NOT NULL,".
 		"description varchar(255),".
 		"creationDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,".
-		"stickers varchar(1000),".
 		"PRIMARY KEY (id));";
 try
 {

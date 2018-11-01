@@ -61,14 +61,16 @@ function logimage(e)
 		document.getElementById("image").style.display = "block";
 		document.getElementById("camoptions").style.display = "block";
 
-		var img = new Image;
+		var img = new Image, context = image.getContext('2d');
 		img.onload = function ()
 		{
-			image.getContext('2d').drawImage(img, 0, 0);
+			image.width = this.width;
+			image.height = this.height;
+			context.drawImage(img, 0, 0);
+			console.log(this.width + " " + this.height);
 		}
 
 		img.src = URL.createObjectURL(file);
-		console.log(img);
 
 		document.getElementById("webcam").style.display = "none";
 		document.getElementById("capture").style.display = "none";
@@ -78,6 +80,7 @@ function logimage(e)
 
 function loadCamera()
 {
+	curSticker = "";
 	if (pagestate == 'verify')
 	{
 		location.replace('index.php');
@@ -380,6 +383,11 @@ function submit()
 			displayError("All Fields Required");
 			return;
 		}
+		if (password != confirm)
+		{
+			displayError("Passwords Don't match");
+			return;
+		}
 		signup(username, email, password);
 		if(isError())
 			return;
@@ -475,4 +483,5 @@ function comment(id)
 	xhttp.open("POST", "modal/comment.php", true);
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("content=" + ret + "&post=" + id);
+	document.getElementById("com" + id).innerHTML += '<p class="com">' + ret + '</p>';
 }

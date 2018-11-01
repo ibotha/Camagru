@@ -53,6 +53,18 @@
 				echo "<button onclick='deleteimage(".$post['id'].")'>Delete</button>"
 		?></button>
 	</div>
+	<div id="com<?php echo $post['id']; ?>">
+		<?php
+			$like = $conn->prepare("SELECT * FROM comments WHERE postID = :id");
+			$like->bindParam(":id", $post['id']);
+			$like->execute();
+			$comments = $like->fetchAll();
+			foreach ($comments as $comment)
+			{
+				echo '<p class="com">'.$comment['content'].'</p>';
+			}
+		?>
+	</div>
 	<?php
 		if ($user)
 			echo "<textarea class='comment' id='".$post['id']."' placeholder='comment...'></textarea>".

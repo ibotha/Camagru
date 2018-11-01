@@ -3,7 +3,26 @@ function saveCapture()
 	clearError();
 	var imgData = document.getElementById("image").toDataURL(),
 		title = document.getElementById("titleinput").value,
-		xhttp = new XMLHttpRequest();
+		xhttp = new XMLHttpRequest(),
+		stick = curSticker.split(":"),
+		imgdat = "";
+	for (var i = 0; i < stick.length; i++)
+	{
+		var img = document.getElementById("stick" + stick[i]),
+			temp = document.createElement('canvas');
+	
+			temp.width  = img.offsetWidth;
+			temp.height = img.offsetHeight;
+	
+			var tempcontext = temp.getContext("2d");
+	
+			tempcontext.drawImage(
+				img,
+				0, 0,
+				img.offsetWidth, img.offsetHeight
+			);
+			imgdat += temp.toDataURL();
+	}
 	if (!title)
 	{
 		displayError("Must Have A Title");
@@ -21,7 +40,7 @@ function saveCapture()
 		};
 		xhttp.open("POST", "modal/saveimage.php", false);
 		xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhttp.send("img=" + imgData + "&title=" + title + "&sticker=" + curSticker);
+		xhttp.send("img=" + imgData + "&title=" + title + "&sticker=" + imgdat);
 	}
 	if (!isError())
 		location.replace("index.php");
