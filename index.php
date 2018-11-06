@@ -20,9 +20,9 @@
 				<button id="login">Login</button>
 				<button id="signup">Sign Up</button>
 				<button id="logout" style="display: none;">Logout</button>
-				<button id="profile" style="display: none;"><?php echo $_SESSION['login']; ?></button>
+				<button id="profile" style="display: none;"><?php echo (isset($_SESSION['login']) ? $_SESSION['login'] : ""); ?></button>
 				<?php
-					if ($_SESSION['login'])
+					if (isset($_SESSION['login']))
 					{ ?>
 						<script>
 							document.getElementById("login").style.display = 'none';
@@ -54,8 +54,8 @@
 			</div>
 		</div>
 		<div id=body></div>
-		<?php if($_GET["key"]){ echo '<div id="keyholder" style="display: none;">'.$_GET["key"].'</div><script src="control/verify.js" type="text/javascript"></script>';}
-				if($_GET["forgot"]){ echo '<div id="forgotholder" style="display: none;">'.$_GET["forgot"].'</div><script src="control/verify.js" type="text/javascript"></script>';} ?>
+		<?php if(isset($_GET["key"])){ echo '<div id="keyholder" style="display: none;">'.$_GET["key"].'</div><script src="control/verify.js" type="text/javascript"></script>';}
+				if(isset($_GET["forgot"])){ echo '<div id="forgotholder" style="display: none;">'.$_GET["forgot"].'</div><script src="control/verify.js" type="text/javascript"></script>';} ?>
 		<div id="footer">
 			<div style="margin-right: 50px">&copy;ibotha 2018</div>
 		</div>

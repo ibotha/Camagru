@@ -13,6 +13,6 @@ xhttp.onreadystatechange = function()
 xhttp.open("POST", "modal/verify.php", true);
 xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 if (document.getElementById('keyholder'))
-	xhttp.send("key=" + document.getElementById('keyholder').innerHTML);
+	xhttp.send("key=" + escape(document.getElementById('keyholder').innerHTML));
 else
-	xhttp.send("forgot=" + document.getElementById('forgotholder').innerHTML);
+	xhttp.send("forgot=" + escape(document.getElementById('forgotholder').innerHTML));

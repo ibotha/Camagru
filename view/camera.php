@@ -1,3 +1,8 @@
+<?php
+session_start();
+if (isset($_SESSION['login']))
+{
+?>
 <div id="cameracontainer">
 	<div id="camera">
 		<video autoplay="true" id="webcam"></video>
@@ -24,3 +29,7 @@
 		</div>
 	</div>
 </div>
+<?php
+}
+else echo "<H1>Must Log In</H1>";
+?>

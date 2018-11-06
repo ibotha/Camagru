@@ -35,16 +35,16 @@ function saveCapture()
 			if (this.readyState == 4 && this.status == 200)
 			{
 				displayError(this.responseText);
+				if (!isError())
+					location.replace("index.php");
 			}
 			else if (this.status == 404)
 				displayError("Page Not Found!");
 		};
 		xhttp.open("POST", "modal/saveimage.php");
 		xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhttp.send("img=" + imgData + "&title=" + title + "&sticker=" + imgdat);
+		xhttp.send("img=" + escape(imgData) + "&title=" + escape(title) + "&sticker=" + escape(imgdat));
 	}
-	if (!isError())
-		location.replace("index.php");
 }
 
 function like(likebtn, postID, userID)
@@ -65,9 +65,9 @@ function like(likebtn, postID, userID)
 		if (this.status == 404)
 			displayError("Page Not Found!");
 	};
-	xhttp.open("POST", "modal/like.php", true);
+	xhttp.open("POST", "modal/like.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("post=" + postID + "&user=" + userID);
+	xhttp.send("post=" + escape(postID) + "&user=" + escape(userID));
 }
 
 function dislike(likebtn, postID, userID)
@@ -86,9 +86,9 @@ function dislike(likebtn, postID, userID)
 		if (this.status == 404)
 			displayError("Page Not Found!");
 	};
-	xhttp.open("POST", "modal/dislike.php", true);
+	xhttp.open("POST", "modal/dislike.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("post=" + postID + "&user=" + userID);
+	xhttp.send("post=" + escape(postID) + "&user=" + escape(userID));
 }
 
 function deleteimage(id)
@@ -105,7 +105,7 @@ function deleteimage(id)
 		if (this.status == 404)
 			displayError("Page Not Found!");
 	};
-	xhttp.open("POST", "modal/deleteimage.php", true);
+	xhttp.open("POST", "modal/deleteimage.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("id=" + id);
+	xhttp.send("id=" + escape(id));
 }

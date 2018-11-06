@@ -23,7 +23,7 @@
 				imagealphablending($img, true);
 				imagesavealpha($img, true);
 				imagesavealpha($stick, true);
-				imagecopy($img, $stick, 20, 20, 0, 0, $size[0], $size[1]);
+				imagecopy($img, $stick, 0, 0, 0, 0, $size[0], $size[1]);
 				imagepng($img, 'save.png');
 				$img = file_get_contents('save.png');
 			}

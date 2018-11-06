@@ -21,7 +21,7 @@ function loadPosts(offset, amount)
 	};
 	xhttp.open("POST", "modal/getimage.php", true);
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("offset=" + offset + "&amount=" + amount);
+	xhttp.send("offset=" + escape(offset) + "&amount=" + escape(amount));
 }
 
 function loadMore()

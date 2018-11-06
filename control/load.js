@@ -92,17 +92,23 @@ function loadCamera()
 		if (this.readyState == 4 && this.status == 200)
 		{
 			document.getElementById("body").innerHTML = this.responseText;
-
-			runcam();
-			document.getElementById("capture").addEventListener("click", imagething);
-			document.getElementById("cancel").addEventListener("click", loadCamera);
-			document.getElementById("image").style.display = "none";
-			document.getElementById("camoptions").style.display = "none";
-			loadStickers();
-			document.getElementById("uploadinput").addEventListener('change', (e) => logimage(e.target.files));
+			if (this.responseText == "<H1>Must Log In</H1>")
+			{
+				showLogin();
+			}
+			else
+			{
+				runcam();
+				document.getElementById("capture").addEventListener("click", imagething);
+				document.getElementById("cancel").addEventListener("click", loadCamera);
+				document.getElementById("image").style.display = "none";
+				document.getElementById("camoptions").style.display = "none";
+				loadStickers();
+				document.getElementById("uploadinput").addEventListener('change', (e) => logimage(e.target.files));
+			}
 		}
 	};
-	xhttp.open("GET", "view/camera.php", true);
+	xhttp.open("GET", "view/camera.php");
 	xhttp.send();
 	pagestate = "camera";
 }
@@ -143,7 +149,7 @@ function loadStickers()
 		else if (this.status == 404)
 			displayError("Page Not Found!");
 	};
-	xhttp.open("POST", "modal/getsticker.php", true);
+	xhttp.open("POST", "modal/getsticker.php");
 	xhttp.send();
 }
 
@@ -162,9 +168,9 @@ function loadSticker(id)
 		else if (this.status == 404)
 			displayError("Page Not Found!");
 	};
-	xhttp.open("POST", "modal/getsticker.php", true);
+	xhttp.open("POST", "modal/getsticker.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("id=" + id);
+	xhttp.send("id=" + escape(id));
 }
 
 function loadProfile()
@@ -183,9 +189,9 @@ function loadProfile()
 		else if (this.status == 404)
 			displayError("Page Not Found!");
 	};
-	xhttp.open("POST", "view/profile.php", true);
+	xhttp.open("POST", "view/profile.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("username=" + this.innerHTML);
+	xhttp.send("username=" + escape(this.innerHTML));
 	pagestate = "profile";
 }
 
@@ -265,17 +271,22 @@ function login(username, password)
 
 	xhttp.onreadystatechange = function ()
 	{
-		if (this.responseText.length > 1)
+		if (this.readyState == 4 && this.status == 200)
 		{
-			displayError(this.responseText);
+			if (this.responseText.length > 1)
+			{
+				displayError(this.responseText);
+			}
+			else
+				location.replace('index.php');
 		}
+		else if (this.status == 404)
+			displayError("Page not found");
 	};
 
-	xhttp.open("POST", "modal/signup.php", false);
+	xhttp.open("POST", "modal/signup.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("username=" + username + "&email=" + email + "&password=" + password + "&state=login");
-	if (!isError())
-		location.replace('index.php');
+	xhttp.send("username=" + escape(username) + "&email=" + escape(email) + "&password=" + escape(password) + "&state=login");
 }
 
 function forgot(email)
@@ -284,15 +295,22 @@ function forgot(email)
 
 	xhttp.onreadystatechange = function ()
 	{
-		if (this.responseText.length > 1)
+		if (this.readyState == 4 && this.status == 200)
 		{
-			displayError(this.responseText);
+			if (this.responseText.length > 1)
+			{
+				displayError(this.responseText);
+			}
+			else
+				hide();
 		}
+		else if (this.status == 404)
+			displayError("Page not found");
 	};
 
-	xhttp.open("POST", "modal/signup.php", false);
+	xhttp.open("POST", "modal/signup.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("email=" + email + "&state=forgot");
+	xhttp.send("email=" + escape(email) + "&state=forgot");
 }
 
 function resend(email)
@@ -301,15 +319,22 @@ function resend(email)
 
 	xhttp.onreadystatechange = function ()
 	{
-		if (this.responseText.length > 1)
+		if (this.readyState == 4 && this.status == 200)
 		{
-			displayError(this.responseText);
+			if (this.responseText.length > 1)
+			{
+				displayError(this.responseText);
+			}
+			else
+				hide();
 		}
+		else if (this.status == 404)
+			displayError("Page not found");
 	};
 
-	xhttp.open("POST", "modal/signup.php", false);
+	xhttp.open("POST", "modal/signup.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("email=" + email + "&state=resend");
+	xhttp.send("email=" + escape(email) + "&state=resend");
 }
 
 function signup(username, email, password)
@@ -319,15 +344,22 @@ function signup(username, email, password)
 
 	xhttp.onreadystatechange = function ()
 	{
-		if (this.responseText.length > 1)
+		if (this.readyState == 4 && this.status == 200)
 		{
-			displayError(this.responseText);
+			if (this.responseText.length > 1)
+			{
+				displayError(this.responseText);
+			}
+			else
+				hide();
 		}
+		else if (this.status == 404)
+			displayError("Page not found");
 	};
 
-	xhttp.open("POST", "modal/signup.php", false);
+	xhttp.open("POST", "modal/signup.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("username=" + username + "&email=" + email + "&password=" + password + "&state=signup");
+	xhttp.send("username=" + escape(username) + "&email=" + escape(email) + "&password=" + escape(password) + "&state=signup");
 }
 
 function logout()
@@ -337,9 +369,6 @@ function logout()
 
 	xhttp.onreadystatechange = function ()
 	{
-		if (this.responseText.length > 1)
-		{
-		}
 	};
 
 	xhttp.open("GET", "modal/logout.php", true);
@@ -390,8 +419,6 @@ function submit()
 			return;
 		}
 		signup(username, email, password);
-		if(isError())
-			return;
 	}
 	if (userstate == "login")
 	{
@@ -401,10 +428,6 @@ function submit()
 			return;
 		}
 		login(username, password);
-		if(isError())
-		{
-			return;
-		}
 	}
 	if (userstate == "forgot")
 	{
@@ -414,10 +437,6 @@ function submit()
 			return;
 		}
 		forgot(email);
-		if(isError())
-		{
-			return;
-		}
 	}
 	if (userstate == "resend")
 	{
@@ -427,10 +446,7 @@ function submit()
 			return;
 		}
 		resend(email);
-		if(isError())
-			return;
 	}
-	hide();
 }
 
 window.onload = function ()
@@ -449,7 +465,7 @@ window.onload = function ()
 	xhttp1.send();
 
 	if (pagestate != "verify")
-		loadCamera();
+		loadFeed();
 	document.getElementById("Gallery").addEventListener("click", loadFeed);
 	document.getElementById("home").addEventListener("click", loadCamera);
 	document.getElementById("profile").addEventListener("click", loadProfile);
@@ -486,8 +502,8 @@ function comment(id)
 		if (this.status == 404)
 			displayError("Page Not Found!");
 	};
-	xhttp.open("POST", "modal/comment.php", true);
+	xhttp.open("POST", "modal/comment.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("content=" + ret + "&post=" + id);
+	xhttp.send("content=" + escape(ret) + "&post=" + escape(id));
 	document.getElementById("com" + id).innerHTML += '<p class="com">' + ret.replace(/</g, "&lt;") + '</p>';
 }

@@ -2,6 +2,8 @@
 
 session_start();
 
+$_POST['email'] = strtolower($_POST['email']);
+
 function sendEmail($email, $name, $username)
 {
 	global $conn;

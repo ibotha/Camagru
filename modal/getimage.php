@@ -2,7 +2,7 @@
 	set_include_path ("../");
 	require 'config/setup.php';
 	session_start();
-	$statement = $conn->prepare("SELECT * FROM posts LIMIT ".$_POST['offset'].",".$_POST['amount'].";");
+	$statement = $conn->prepare("SELECT * FROM `posts` ORDER BY `creationDate` DESC LIMIT ".$_POST['offset'].",".$_POST['amount'].";");
 	$statement->execute();
 	$posts = $statement->fetchAll();
 

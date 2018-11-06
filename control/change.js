@@ -14,15 +14,15 @@ function repasssubmit()
 				if (this.readyState == 4 && this.status == 200)
 				{
 					displayError(this.responseText);
+					if (!isError())
+						location.replace("index.php");
 				}
 				else if (this.status == 404)
 					displayError("Page Not Found!");
 			};
-			xhttp.open("POST", "modal/updateuser.php", false);
+			xhttp.open("POST", "modal/updateuser.php");
 			xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhttp.send("key=" + verif + "&update=" + password + "&toupdate=repassword");
-			if (!isError())
-				location.replace("index.php");
+			xhttp.send("key=" + escape(verif) + "&update=" + escape(password) + "&toupdate=repassword");
 	}
 	else displayError("Passwords Do Not Match");
 }
@@ -73,14 +73,15 @@ function updatePart(which, name)
 				if (this.readyState == 4 && this.status == 200)
 				{
 					displayError(this.responseText);
+					if (!isError())
+						location.replace("index.php");
 				}
 				else if (this.status == 404)
 					displayError("Page Not Found!");
 			};
-			xhttp.open("POST", "modal/updateuser.php", false);
+			xhttp.open("POST", "modal/updateuser.php");
 			xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			console.log("username");
-			xhttp.send("name=" + name + "&update=" + username + "&toupdate=username");
+			xhttp.send("name=" + escape(name) + "&update=" + escape(username) + "&toupdate=username");
 			break;
 		case 'email':
 			var xhttp = new XMLHttpRequest();
@@ -89,13 +90,15 @@ function updatePart(which, name)
 				if (this.readyState == 4 && this.status == 200)
 				{
 					displayError(this.responseText);
+					if (!isError())
+						location.replace("index.php");
 				}
 				else if (this.status == 404)
 					displayError("Page Not Found!");	
 			};
-			xhttp.open("POST", "modal/updateuser.php", false);
+			xhttp.open("POST", "modal/updateuser.php");
 			xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhttp.send("name=" + name + "&update=" + email + "&toupdate=email");
+			xhttp.send("name=" + escape(name) + "&update=" + escape(email) + "&toupdate=email");
 			break;
 		case 'password':
 			if (password == confirm)
@@ -106,21 +109,21 @@ function updatePart(which, name)
 					if (this.readyState == 4 && this.status == 200)
 					{
 						displayError(this.responseText);
+						if (!isError())
+							location.replace("index.php");
 					}
 					else if (this.status == 404)
 						displayError("Page Not Found!");
 				};
-				xhttp.open("POST", "modal/updateuser.php", false);
+				xhttp.open("POST", "modal/updateuser.php");
 				xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-				xhttp.send("name=" + name + "&update=" + password + "&toupdate=password" + "&oldpassword=" + oldpassword);
+				xhttp.send("name=" + escape(name) + "&update=" + escape(password) + "&toupdate=password" + "&oldpassword=" + escape(oldpassword));
 			}
 			else displayError("Passwords do not match");
 			break;
 		default:
 			break;
 	}
-	if (!isError())
-		location.replace("index.php");
 }
 
 function changeNotify(e)
@@ -133,7 +136,7 @@ function changeNotify(e)
 		if (this.status == 404)
 			displayError("Page Not Found!");
 	};
-	xhttp.open("POST", "modal/changeNotify.php", true);
+	xhttp.open("POST", "modal/changeNotify.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("note=" + e);
+	xhttp.send("note=" + escape(e));
 }
