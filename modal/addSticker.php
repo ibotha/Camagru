@@ -1,22 +1,32 @@
 <?php
-if (file_get_contents($_GET['pic']))
+if($_GET.key_exists('pic'))
 {
-	set_include_path ("../");
-	require 'config/setup.php';
-	
-	$img = base64_encode(file_get_contents($_GET['pic']));
+	$content=file_get_contents($_GET['pic']);
+	if ($content)
+	{
+		set_include_path ("../");
+		require 'config/database.php';
 
-	$img = str_replace(" ", "+", $img);
-	$img = 'data:image/png;base64,'.$img;
+		$ext = strtolower(pathinfo($_GET['pic'],PATHINFO_EXTENSION));
 
-	$statement = $conn->prepare("INSERT INTO stickers(`img`) VALUE (:img)");
-	$statement->bindParam(":img", $img);
-	$statement->execute();
-	header("Location: addSticker.php");
+		if (!in_array($ext, ["png", "jpeg", "jpg", "gif"]))
+		{
+			echo ($ext.": bad file!");
+			die();
+		}
+		$destination = uniqid().$ext;
+
+		$statement = $conn->prepare("INSERT INTO stickers(`path`) VALUE (:imgpath)");
+		$statement->bindParam(":imgpath", $destination);
+		$statement->execute();
+		$dir = '../stickers';
+		if (!file_exists($dir)) {
+			mkdir($dir, 0777, true);
+		}
+		copy($_GET['pic'], $dir."/".$destination);
+	}
 }
-else {
 ?>
-	<form action="addSticker.php" method="get">
-		<input name="pic">
-	</form>
-<?php } ?>
+<form action="addSticker.php" method="get">
+	<input name="pic">
+</form>

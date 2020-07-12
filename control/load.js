@@ -203,9 +203,9 @@ function showLogin()
 		return;
 	}
 	hide();
-	document.getElementById("username").style.display = "block";
 	document.getElementById("password").style.display = "block";
-	document.getElementById("email").style.display = "none";
+	document.getElementById("email").style.display = "block";
+	document.getElementById("username").style.display = "none";
 	document.getElementById("confirm").style.display = "none";
 	document.getElementById("submit").style.display = "block";
 	document.getElementById("forgot").style.display = "block";
@@ -264,7 +264,7 @@ function clearError()
 	document.getElementById("message").innerHTML = "";
 }
 
-function login(username, password)
+function login(email, password)
 {
 	var xhttp = new XMLHttpRequest();
 
@@ -286,7 +286,7 @@ function login(username, password)
 
 	xhttp.open("POST", "modal/signup.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhttp.send("username=" + escape(username) + "&email=" + escape(email) + "&password=" + escape(password) + "&state=login");
+	xhttp.send("email=" + escape(email) + "&password=" + escape(password) + "&state=login");
 }
 
 function forgot(email)
@@ -422,12 +422,12 @@ function submit()
 	}
 	if (userstate == "login")
 	{
-		if ((!username || !password))
+		if ((!email || !password))
 		{
 			displayError("All Fields Required");
 			return;
 		}
-		login(username, password);
+		login(email, password);
 	}
 	if (userstate == "forgot")
 	{
@@ -480,7 +480,7 @@ window.onload = function ()
 
 function comment(id)
 {
-	var posts = document.getElementsByClassName("comment");
+	var posts = document.getElementsByClassName("commentbox");
 	for (var i = 0; i < posts.length; i++)
 	{
 		if (posts[i].getAttribute('id') == id)
@@ -505,5 +505,10 @@ function comment(id)
 	xhttp.open("POST", "modal/comment.php");
 	xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhttp.send("content=" + escape(ret) + "&post=" + escape(id));
-	document.getElementById("com" + id).innerHTML += '<p class="com">' + ret.replace(/</g, "&lt;") + '</p>';
+	document.getElementById("com" + id).innerHTML += '<div class=comment>' +
+	'<div class="commentuploader" style="color:white;">Me: &nbsp; </div>' +
+	'<div class="com">' +
+		ret.replace(/</g, "&lt;") +
+	'</div>' +
+	'</div>';
 }

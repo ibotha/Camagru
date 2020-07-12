@@ -1,6 +1,6 @@
 <?php
 	set_include_path ("../");
-	require 'config/setup.php';
+	require 'config/database.php';
 	$statement = $conn->prepare("INSERT INTO likes(uploaderID, postID) VALUES (:user, :post)");
 	$statement->bindParam(":user", $_POST['user']);
 	$statement->bindParam(":post", $_POST['post']);

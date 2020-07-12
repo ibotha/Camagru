@@ -21,7 +21,7 @@
 		return (mail($to, $subject, $message, implode("\r\n", $headers)));
 	}
 	set_include_path ("../");
-	require 'config/setup.php';
+	require 'config/database.php';
 	session_start();
 
 	if (isset($_SESSION['login']))
@@ -38,7 +38,7 @@
 			$statement = $conn->prepare("INSERT INTO comments(`uploaderID`, `postID`, `content`) VALUE (:user, :post, :content)");
 			$statement->bindParam(":post", $_POST['post']);
 			$statement->bindParam(":user", $user['id']);
-			$statement->bindParam(":content", $message);
+			$statement->bindParam(":content", str_replace("<", "&lt;", $message));
 			$statement->execute();
 			$statement = $conn->prepare("SELECT * FROM `posts` WHERE id = :post LIMIT 1");
 			$statement->bindParam(":post", $_POST['post']);

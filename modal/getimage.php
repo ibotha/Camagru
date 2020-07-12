@@ -1,6 +1,6 @@
 <?php
 	set_include_path ("../");
-	require 'config/setup.php';
+	require 'config/database.php';
 	session_start();
 	$statement = $conn->prepare("SELECT * FROM `posts` ORDER BY `creationDate` DESC LIMIT ".$_POST['offset'].",".$_POST['amount'].";");
 	$statement->execute();
@@ -24,9 +24,10 @@
 			$uploader->bindParam(":id", $post['uploaderID']);
 			$uploader->execute();
 			print($uploader->fetch()['username']);
-		?></div>
+		?>
+	</div>
 	<div class="posttitle"><?php echo str_replace("<", "&lt;", $post['description']); ?></div>
-	<img class="postimg" src="<?php echo $post['img']; ?>">
+	<img class="postimg" src="<?='uploads/'.$post['path']?>"/>
 	<div class="options" id="post<?php echo $post['id'] ?>" style="height: 40px;">
 		<p class="likes"><?php
 			$likes = $conn->prepare("SELECT COUNT(*) FROM likes WHERE postID = :id;");
@@ -55,19 +56,26 @@
 	</div>
 	<div id="com<?php echo $post['id']; ?>">
 		<?php
-			$like = $conn->prepare("SELECT * FROM comments WHERE postID = :id");
-			$like->bindParam(":id", $post['id']);
-			$like->execute();
-			$comments = $like->fetchAll();
+			$commentsql = $conn->prepare("SELECT comments.content AS content, users.username as username FROM `comments` LEFT JOIN users ON comments.uploaderID = users.id WHERE postID = :id");
+			$commentsql->bindParam(":id", $post['id']);
+			$commentsql->execute();
+			$comments = $commentsql->fetchAll();
 			foreach ($comments as $comment)
 			{
-				echo '<p class="com">'.str_replace("<", "&lt;", $comment['content']).'</p>';
+				?>
+				<div class=comment>
+					<div class="commentuploader" style="<?=$_SESSION['login']==$comment['username'] ? 'color: white;' : ''?>"><?=$_SESSION['login']==$comment['username'] ? 'Me' : $comment['username']?>: &nbsp; </div>
+					<div class="com">
+						<?=$comment['content']?>
+					</div>
+				</div>
+				<?php
 			}
 		?>
 	</div>
 	<?php
 		if ($user)
-			echo "<textarea class='comment' id='".$post['id']."' placeholder='comment...'></textarea>".
+			echo "<textarea class='commentbox' id='".$post['id']."' placeholder='comment...'></textarea>".
 			"<div class='options'>".
 			"<button onclick='comment(".$post['id'].")'>Comment</button>".
 			"</div>";

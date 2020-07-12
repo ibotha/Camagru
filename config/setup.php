@@ -1,6 +1,6 @@
 <?php
 
-require "config/database.php";
+require "database.php";
 
 $user = "CREATE TABLE IF NOT EXISTS users (".
 		"id int NOT NULL AUTO_INCREMENT,".
@@ -23,11 +23,13 @@ catch(PDOException $e)
 
 $post = "CREATE TABLE IF NOT EXISTS posts (".
 		"id int NOT NULL AUTO_INCREMENT,".
-		"img BLOB(4294967295) NOT NULL,".
+		"path varchar(255) NOT NULL,".
 		"uploaderID int NOT NULL,".
 		"description varchar(255),".
 		"creationDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,".
-		"PRIMARY KEY (id));";
+		"PRIMARY KEY (id),".
+		"FOREIGN KEY (uploaderID) REFERENCES users(id) ON DELETE CASCADE".
+	");";
 try
 {
 	$conn->exec($post);
@@ -39,7 +41,7 @@ catch(PDOException $e)
 
 $sticker = "CREATE TABLE IF NOT EXISTS stickers (".
 		"id int NOT NULL AUTO_INCREMENT,".
-		"img BLOB(4294967295) NOT NULL,".
+		"path varchar(255) NOT NULL,".
 		"PRIMARY KEY (id));";
 try
 {
@@ -56,7 +58,10 @@ $comment = "CREATE TABLE IF NOT EXISTS comments (".
 		"postID int NOT NULL,".
 		"content varchar(1000) NOT NULL,".
 		"creationDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,".
-		"PRIMARY KEY (id));";
+		"PRIMARY KEY (id),".
+		"FOREIGN KEY (uploaderID) REFERENCES users(id) ON DELETE CASCADE,".
+		"FOREIGN KEY (postID) REFERENCES posts(id) ON DELETE CASCADE".
+	");";
 try
 {
 	$conn->exec($comment);
@@ -68,7 +73,10 @@ catch(PDOException $e)
 
 $like = "CREATE TABLE IF NOT EXISTS likes (".
 		"uploaderID int NOT NULL,".
-		"postID int NOT NULL);";
+		"postID int NOT NULL,".
+		"FOREIGN KEY (uploaderID) REFERENCES users(id) ON DELETE CASCADE,".
+		"FOREIGN KEY (postID) REFERENCES posts(id) ON DELETE CASCADE".
+	");";
 try
 {
 	$conn->exec($like);

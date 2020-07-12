@@ -100,7 +100,7 @@ else
 	{
 		if ($_POST['state'] == 'login')
 		{
-			if ($users['password'] == $password)
+			if ($users['password'] == $password && $_POST['email'] == $users['email'])
 			{
 				if ($users['active'] == 1)
 				{

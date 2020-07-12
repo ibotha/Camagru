@@ -1,7 +1,7 @@
 <?php
 	$DB_DSN = "127.0.0.1";
 	$DB_USER = "root";
-	$DB_PASSWORD = "passwd";
+	$DB_PASSWORD = "password";
 	$DB_NAME = "camagru";
 
 	try

@@ -1,7 +1,7 @@
 <?php
 	echo '<p class="big">';
 	set_include_path("../");
-	require 'config/setup.php';
+	require 'config/database.php';
 	if ($_POST['key'])
 	{
 		$sql = "SELECT * FROM `users` WHERE verif = :verif LIMIT 1";

@@ -1,6 +1,6 @@
 <?php
 	set_include_path ("../");
-	require 'config/setup.php';
+	require 'config/database.php';
 
 	session_start();
 	if (isset($_SESSION['login']))
@@ -12,6 +12,13 @@
 		$img = base64_decode(str_replace("data:image/png;base64,", "", $img));
 
 		$split = explode("data:image/png;base64,", $_POST['sticker']);
+
+		$target = uniqid().".png";
+		$dir = "../uploads";
+		if (!file_exists($dir)) {
+			mkdir($dir, 0777, true);
+		}
+
 		foreach ($split as $spli)
 		{
 			if ($spli)
@@ -24,8 +31,7 @@
 				imagesavealpha($img, true);
 				imagesavealpha($stick, true);
 				imagecopy($img, $stick, 0, 0, 0, 0, $size[0], $size[1]);
-				imagepng($img, 'save.png');
-				$img = file_get_contents('save.png');
+				imagepng($img, $dir."/".$target);
 			}
 		}
 		$users_req = $conn->prepare("SELECT * FROM `users` WHERE `username` = :username LIMIT 1");
@@ -35,16 +41,13 @@
 
 		if ($user)
 		{
-			$img = base64_encode($img);
-			$img = "data:image/png;base64,".$img;
-			$statement = $conn->prepare("INSERT INTO posts(`img`, `description`, `uploaderID`) VALUE (:img, :title, :ID)");
-			$statement->bindParam(":img", preg_replace("/ /", "+", $img));
+			$statement = $conn->prepare("INSERT INTO posts(`path`, `description`, `uploaderID`) VALUE (:imgpath, :title, :ID)");
+			$statement->bindParam(":imgpath", $target);
 			$statement->bindParam(":title", $_POST['title']);
 			$statement->bindParam(":ID", $user['id']);
 			$statement->execute();
 		}
 		else echo "Must Log In";
-		unlink('save.png');
 	}
 	else echo "Must Log In";
 ?>

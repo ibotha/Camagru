@@ -122,6 +122,11 @@ button
 	color: gray;
 }
 
+.greyed:hover
+{
+	color: gray;
+}
+
 button:hover
 {
 	color: white;
@@ -276,7 +281,7 @@ button:focus {outline:0;}
 	width: 100%;
 }
 
-.comment
+.commentbox
 {
 	width: 90%;
 	height: 60px;
@@ -287,10 +292,24 @@ button:focus {outline:0;}
 	overflow-y: auto;
 }
 
+.comment
+{
+	color: lightgray;
+	background-color: rgba(0, 0, 0, 0.2);
+	margin: 2px auto;
+	width: calc(90% - 8px);
+	padding: 4px;
+}
+
+.commentuploader
+{
+	font-weight: bold;
+	display: inline;
+}
+
 .com
 {
 	border-bottom: 1px solid white;
 	color: lightgray;
-	width: 90%;
-	margin: 8px auto;
+	display: inline;
 }

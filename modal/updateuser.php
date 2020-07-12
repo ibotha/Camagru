@@ -1,7 +1,7 @@
 <?php
 session_start();
 set_include_path ("../");
-require 'config/setup.php';
+require 'config/database.php';
 $password = hash('whirlpool', $_POST['password']);
 
 $users_req = $conn->prepare("SELECT * FROM `users` WHERE `username` = :username OR `verif` = :verif LIMIT 1");

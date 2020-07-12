@@ -1,7 +1,7 @@
 <?php
 session_start();
 set_include_path ("../");
-require 'config/setup.php';
+require 'config/database.php';
 
 $users_req = $conn->prepare("SELECT * FROM `users` WHERE `username` = :username LIMIT 1");
 $users_req->bindParam(":username", $_SESSION['login']);

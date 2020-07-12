@@ -1,6 +1,6 @@
 <?php
 	set_include_path ("../");
-	require 'config/setup.php';
+	require 'config/database.php';
 	$stickers = explode(":", $_POST['id']);
 	$stmt = "SELECT * FROM stickers";
 	if (isset($_POST['id']))
@@ -26,7 +26,7 @@
 	foreach ($posts as $post)
 	{
 ?>
-<?php if (!isset($_POST['id'])) { ?><button class="sticker" onclick="selectSticker(<?php echo $post['id']; ?>)" id="<?php echo $post['id']; ?>"><?php } ?>
-	<img <?php if (isset($_POST['id'])) echo 'class="stick"'; ?>src="<?php echo $post['img']; ?>" id="stick<?php echo $post['id']; ?>">
+<?php if (!isset($_POST['id'])) { ?><button class="sticker" onclick="selectSticker(<?=$post['id']?>)" id="<?=$post['id']?>"><?php } ?>
+	<img <?php if (isset($_POST['id'])) echo 'class="stick"'; ?>src="<?="stickers/".$post['path']?>" id="stick<?=$post['id']?>">
 	<?php if (!isset($_POST['id'])) { ?> </button> <?php } ?>
 <?php	} ?>
