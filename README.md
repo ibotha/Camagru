@@ -1,6 +1,6 @@
 # CAMAGRU
 
-Camagru is a simple image editing and posting web-app similar to instagram.
+Camagru is a simple image editing and posting web-app similar to instagram. I created this in order to learn how to build a website.
 
 ![preview]
 
