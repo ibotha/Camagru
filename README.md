@@ -30,6 +30,7 @@ The server should now be up and running in full.
 ## Tests
 It is recommended to run these tests once the server is set up in order to ensure that everything is working properly
 
+### Steps
 1. Navigate to [localhost/Camagru/](http://localhost/Camagru/)
 2. Click signup and create an account. make sure to use a valid email address
 3. Check your inbox for a verification email and verify your account. If you do not recieve one check that you have configured your php.ini and hmail server correctly
@@ -37,11 +38,25 @@ It is recommended to run these tests once the server is set up in order to ensur
 5. click on *Camagru* in the top left corner and attempt to take a photo.
 6. Select a sticker and enter a title.
 7. click *post*
-8. Your post should appear in the feed now.
-9. Comment on, and like your post, then refresh. If the comment and like are still present all is well.
-10. Lastly attempt to delete the post.
+8. Comment on, and like your post, then refresh. If the comment and like are still present all is well.
+9. Attempt to delete the post.
+10. Lastly log out and test the signup and login forms with erronious data
+
+### Outcomes
+1. The webpage should load.
+2. The account should appear in the database.
+3. You should recieve an email and once you follow the link you should see a page stating that your account is verified
+4. your username should appear in the top-right corner
+5. a screen should appear with a preview of your webcam. this preview should be replaced with an image once you take the photo.
+6. the sticker should appear over your image.
+7. the feed should load with your new post at the top
+8. Your comment should appear on the post after a refresh
+9. the post should disappear
+10. Invalid emails, incorrect credentials and short/simple passwords should be caught
 
 If all these steps passed then the website is fully functional
+
+In addition [here](https://github.com/wethinkcode-students/corrections_42_curriculum/blob/master/camagru.markingsheet.pdf) is the marking sheet for the project
 
 ## Structure
 
